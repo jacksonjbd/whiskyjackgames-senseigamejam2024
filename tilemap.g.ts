@@ -328,6 +328,10 @@ namespace myTiles {
     export const tile162 = image.ofBuffer(hex``);
     //% fixedInstance jres blockIdentity=images._tile
     export const tile163 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile164 = image.ofBuffer(hex``);
+    //% fixedInstance jres blockIdentity=images._tile
+    export const tile165 = image.ofBuffer(hex``);
 
     helpers._registerFactory("tilemap", function(name: string) {
         switch(helpers.stringTrim(name)) {
@@ -546,7 +550,7 @@ namespace myTiles {
 22........2.......222........222.......222.......222.......22
 222...2222222.....2222.......22222222222222222222222222222222
 2222222222222222222222222222222222222222222222222222222222222
-`, [myTiles.transparency16,sprites.dungeon.greenOuterNorth0,sprites.dungeon.greenOuterEast0,sprites.dungeon.darkGroundCenter,myTiles.tile1,myTiles.tile13,myTiles.tile3,myTiles.tile5,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile12,myTiles.tile14,myTiles.tile15,myTiles.tile22,myTiles.tile23,myTiles.tile25,myTiles.tile37,myTiles.tile38,myTiles.tile39,myTiles.tile40,myTiles.tile49,myTiles.tile53,myTiles.tile24,myTiles.tile54,myTiles.tile16,myTiles.tile17,myTiles.tile27,myTiles.tile28,myTiles.tile61,myTiles.tile62,myTiles.tile63,myTiles.tile64,myTiles.tile67,myTiles.tile69,myTiles.tile70,myTiles.tile71,myTiles.tile68,sprites.dungeon.darkGroundNorthWest0,sprites.dungeon.darkGroundNorthEast0,sprites.dungeon.darkGroundSouthEast0,sprites.dungeon.darkGroundSouthWest0,sprites.dungeon.darkGroundSouth,sprites.dungeon.darkGroundNorth,sprites.dungeon.darkGroundEast,sprites.dungeon.darkGroundWest,myTiles.tile55,myTiles.tile57,myTiles.tile58,myTiles.tile59,myTiles.tile124,myTiles.tile131,myTiles.tile133,myTiles.tile134,myTiles.tile135,myTiles.tile136,myTiles.tile137,myTiles.tile138,myTiles.tile139,myTiles.tile140,myTiles.tile141,myTiles.tile142,myTiles.tile143,myTiles.tile144,myTiles.tile145,myTiles.tile146,myTiles.tile147,myTiles.tile148,myTiles.tile149,myTiles.tile150,myTiles.tile151,myTiles.tile152,myTiles.tile153,myTiles.tile154,myTiles.tile155,myTiles.tile156,myTiles.tile157,myTiles.tile158,myTiles.tile159,myTiles.tile160,myTiles.tile161,myTiles.tile29,myTiles.tile2,myTiles.tile26,myTiles.tile33,myTiles.tile35,myTiles.tile36,myTiles.tile90,myTiles.tile91,myTiles.tile93,myTiles.tile76,myTiles.tile75,myTiles.tile74,myTiles.tile79,myTiles.tile83,myTiles.tile81,myTiles.tile8,myTiles.tile30,myTiles.tile96,myTiles.tile97,myTiles.tile98,myTiles.tile99,myTiles.tile95,myTiles.tile101,myTiles.tile34,myTiles.tile94,myTiles.tile80,myTiles.tile88,myTiles.tile100,myTiles.tile102,myTiles.tile103,myTiles.tile106,myTiles.tile108,myTiles.tile111,myTiles.tile113,myTiles.tile116,myTiles.tile118,myTiles.tile121,myTiles.tile87,myTiles.tile89,myTiles.tile123,myTiles.tile128,myTiles.tile129,myTiles.tile130,myTiles.tile162,myTiles.tile163], TileScale.Sixteen);
+`, [myTiles.transparency16,sprites.dungeon.greenOuterNorth0,sprites.dungeon.greenOuterEast0,sprites.dungeon.darkGroundCenter,myTiles.tile1,myTiles.tile13,myTiles.tile3,myTiles.tile5,myTiles.tile9,myTiles.tile10,myTiles.tile11,myTiles.tile12,myTiles.tile14,myTiles.tile15,myTiles.tile22,myTiles.tile23,myTiles.tile25,myTiles.tile37,myTiles.tile38,myTiles.tile39,myTiles.tile40,myTiles.tile49,myTiles.tile53,myTiles.tile24,myTiles.tile54,myTiles.tile16,myTiles.tile17,myTiles.tile27,myTiles.tile28,myTiles.tile61,myTiles.tile62,myTiles.tile63,myTiles.tile64,myTiles.tile67,myTiles.tile69,myTiles.tile70,myTiles.tile71,myTiles.tile68,sprites.dungeon.darkGroundNorthWest0,sprites.dungeon.darkGroundNorthEast0,sprites.dungeon.darkGroundSouthEast0,sprites.dungeon.darkGroundSouthWest0,sprites.dungeon.darkGroundSouth,sprites.dungeon.darkGroundNorth,sprites.dungeon.darkGroundEast,sprites.dungeon.darkGroundWest,myTiles.tile55,myTiles.tile57,myTiles.tile58,myTiles.tile59,myTiles.tile124,myTiles.tile131,myTiles.tile133,myTiles.tile134,myTiles.tile135,myTiles.tile136,myTiles.tile137,myTiles.tile138,myTiles.tile139,myTiles.tile140,myTiles.tile141,myTiles.tile142,myTiles.tile143,myTiles.tile144,myTiles.tile145,myTiles.tile146,myTiles.tile147,myTiles.tile148,myTiles.tile149,myTiles.tile150,myTiles.tile151,myTiles.tile152,myTiles.tile153,myTiles.tile154,myTiles.tile155,myTiles.tile156,myTiles.tile157,myTiles.tile158,myTiles.tile159,myTiles.tile160,myTiles.tile161,myTiles.tile29,myTiles.tile2,myTiles.tile26,myTiles.tile33,myTiles.tile35,myTiles.tile36,myTiles.tile90,myTiles.tile91,myTiles.tile93,myTiles.tile76,myTiles.tile75,myTiles.tile74,myTiles.tile79,myTiles.tile83,myTiles.tile81,myTiles.tile8,myTiles.tile30,myTiles.tile96,myTiles.tile97,myTiles.tile98,myTiles.tile99,myTiles.tile95,myTiles.tile101,myTiles.tile34,myTiles.tile94,myTiles.tile80,myTiles.tile88,myTiles.tile100,myTiles.tile102,myTiles.tile103,myTiles.tile106,myTiles.tile108,myTiles.tile111,myTiles.tile113,myTiles.tile116,myTiles.tile118,myTiles.tile121,myTiles.tile87,myTiles.tile89,myTiles.tile123,myTiles.tile128,myTiles.tile129,myTiles.tile130,myTiles.tile162,myTiles.tile163,myTiles.tile122,myTiles.tile165], TileScale.Sixteen);
         }
         return null;
     })
@@ -880,6 +884,10 @@ namespace myTiles {
             case "tile162":return tile162;
             case "Empty5":
             case "tile163":return tile163;
+            case "Empty6":
+            case "tile164":return tile164;
+            case "myTile142":
+            case "tile165":return tile165;
         }
         return null;
     })

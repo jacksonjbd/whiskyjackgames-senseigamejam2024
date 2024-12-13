@@ -1370,7 +1370,9 @@ function createPickup (_x: number, _y: number, _drop: number, _heart: number) {
     }
 }
 function updateHUD () {
-    text_timer.setText(convertToText(Math.round(game.runtime() / 1000)))
+    if (!(bool_isGameOver)) {
+        text_timer.setText(convertToText(Math.round(game.runtime() / 1000)))
+    }
     if (num_currentMoneyAdd > 0) {
         num_currentMoney += 1
         num_currentMoneyAdd += -1
@@ -1695,6 +1697,23 @@ function wakeUpRobots () {
         	
         }
     }
+}
+function applyPalette () {
+    color.setColor(1, palette_white)
+    color.setColor(2, palette_colourDark)
+    color.setColor(3, palette_colourLight)
+    color.setColor(4, palette_colourDark)
+    color.setColor(5, palette_white)
+    color.setColor(6, palette_colourDark)
+    color.setColor(7, palette_colourLight)
+    color.setColor(8, palette_colourDark)
+    color.setColor(9, palette_colourLight)
+    color.setColor(10, palette_colourLight)
+    color.setColor(11, palette_gray)
+    color.setColor(12, palette_black)
+    color.setColor(13, palette_white)
+    color.setColor(14, palette_gray)
+    color.setColor(15, palette_black)
 }
 function flipSwitch (_switchDown: Image, _blockUp: Image, _blockMid: Image, _blockDown: Image, _column: number, _row: number) {
     tiles.setTileAt(tiles.getTileLocation(_column, _row), _switchDown)
@@ -3142,16 +3161,21 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
         false
         )
         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 251, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
+        controller.moveSprite(_player, 0, 0)
         timer.after(300, function () {
+            controller.moveSprite(_player, 0, 0)
             music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 202, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             timer.after(300, function () {
+                controller.moveSprite(_player, 0, 0)
                 music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 149, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                 timer.after(300, function () {
+                    controller.moveSprite(_player, 0, 0)
                     music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 105, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                     timer.after(300, function () {
+                        controller.moveSprite(_player, 0, 0)
                         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 52, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                         timer.after(500, function () {
-                            music.setVolume(50)
+                            music.setVolume(100)
                             game.setGameOverEffect(false, effects.dissolve)
                             game.gameOver(false)
                         })
@@ -3470,6 +3494,373 @@ function closeDoorsInView () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`Empty5`, function (sprite, location) {
     num_playerSpeed = 55
 })
+/**
+ * Win Funcs
+ */
+scene.onOverlapTile(SpriteKind.Interact, assets.tile`Empty3`, function (sprite, location) {
+    controller.moveSprite(sprite_player, 0, 0)
+    _sprite_lever = sprites.create(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        `, SpriteKind.Dummy)
+    _num_finalTime = game.runtime() / 1000
+    bool_isGameOver = true
+    tiles.setTileAt(location, assets.tile`Empty6`)
+    animation.runImageAnimation(
+    _sprite_lever,
+    [img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 c c c c c c c c c c 7 7 c 
+        c 6 c 7 7 7 7 7 7 7 7 7 7 c 6 c 
+        c 6 d 6 6 6 6 6 6 6 6 6 6 d 6 c 
+        c 6 b b c c c c c c c c b b 6 c 
+        c c 6 b c c c c c c c c b 6 c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 6 c c c c c c c c c c 6 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c 7 7 7 7 7 7 7 7 7 7 c 6 c 
+        c 6 d 7 7 7 7 7 7 7 7 7 7 d 6 c 
+        c c b 6 6 6 6 6 6 6 6 6 6 b c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 6 c c c c c c c c c c 6 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c 7 7 7 7 7 7 7 7 7 7 c 6 c 
+        c 6 d 7 7 7 7 7 7 7 7 7 7 d 6 c 
+        c c b 6 6 6 6 6 6 6 6 6 6 b c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c d 7 7 7 7 7 7 7 7 7 7 d c c 
+        c c b 6 6 6 6 6 6 6 6 6 6 b c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c d 7 7 7 7 7 7 7 7 7 7 d c c 
+        c c b 6 6 6 6 6 6 6 6 6 6 b c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c d 7 7 7 7 7 7 7 7 7 7 d c c 
+        c c b 6 6 6 6 6 6 6 6 6 6 b c c 
+        c c 6 c c c c c c c c c c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
+        6 6 7 7 7 c d 7 7 d c 7 7 7 6 6 
+        c c c c c c c d d c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 7 7 7 7 7 7 7 7 7 7 7 7 7 7 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c d c c c c c c c c d c 6 c 
+        c c 6 d c c c c c c c c d 6 c c 
+        c c 6 b 7 7 7 7 7 7 7 7 b 6 c c 
+        c c 6 c 6 6 6 6 6 6 6 6 c 6 c c 
+        6 6 6 6 c c c c c c c c 6 6 6 6 
+        c c c 6 6 6 6 6 6 6 6 6 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `,img`
+        6 6 6 6 6 6 c 6 6 c 6 6 6 6 6 6 
+        6 7 7 7 6 c 6 c c 6 c 6 7 7 7 6 
+        6 7 7 7 6 c 6 c c 6 c 6 7 7 7 6 
+        6 6 6 6 6 c b 6 6 b c 6 6 6 6 6 
+        c c c c c c c b b c c c c c c c 
+        c c c c c c c c c c c c c c c c 
+        c 6 6 6 6 6 6 6 6 6 6 6 6 6 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c c c c c c c c c c c c 6 c 
+        c 6 c b c c c c c c c c b c 6 c 
+        c c 6 b c c c c c c c c b 6 c c 
+        c c 6 b b c c c c c c b b 6 c c 
+        c c 6 c b 6 6 6 6 6 6 b c 6 c c 
+        6 6 6 6 c 6 6 6 6 6 6 c 6 6 6 6 
+        c c c 6 c c c c c c c c 6 c c c 
+        c c c c c c c c c c c c c c c c 
+        `],
+    500,
+    false
+    )
+    tiles.placeOnTile(_sprite_lever, location)
+    music.play(music.createSoundEffect(
+    WaveShape.Noise,
+    4169,
+    5000,
+    80,
+    0,
+    50,
+    SoundExpressionEffect.None,
+    InterpolationCurve.Curve
+    ), music.PlaybackMode.InBackground)
+    music.play(music.createSoundEffect(
+    WaveShape.Square,
+    98,
+    98,
+    0,
+    100,
+    7500,
+    SoundExpressionEffect.None,
+    InterpolationCurve.Curve
+    ), music.PlaybackMode.InBackground)
+    timer.after(7500, function () {
+        music.play(music.createSoundEffect(
+        WaveShape.Noise,
+        5000,
+        5000,
+        40,
+        0,
+        50,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Curve
+        ), music.PlaybackMode.InBackground)
+        music.play(music.createSoundEffect(
+        WaveShape.Noise,
+        4169,
+        5000,
+        40,
+        0,
+        50,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Curve
+        ), music.PlaybackMode.InBackground)
+        music.play(music.createSoundEffect(
+        WaveShape.Noise,
+        5000,
+        2978,
+        40,
+        0,
+        50,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Curve
+        ), music.PlaybackMode.InBackground)
+        for (let index = 0; index <= 4; index++) {
+            for (let index2 = 0; index2 <= 6; index2++) {
+                tiles.setTileAt(tiles.getTileLocation(52 + index2, 50 + index), assets.tile`Empty`)
+            }
+        }
+        timer.after(500, function () {
+            controller.moveSprite(sprite_player, 75, 75)
+            tiles.setTileAt(tiles.getTileLocation(48, 52), assets.tile`myTile142`)
+        })
+    })
+})
 function playSparkle () {
     music.play(music.createSoundEffect(
     WaveShape.Triangle,
@@ -3713,6 +4104,7 @@ function wizardDialog (_wizard: Sprite) {
             _num_dialogLength = 2000
             _wizard.sayText("Thank you for saving them!!", _num_dialogLength, true)
             timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = true
                 animation.runImageAnimation(
                 _wizard,
                 [img`
@@ -3757,6 +4149,7 @@ function wizardDialog (_wizard: Sprite) {
                 playWizardNoise()
                 _wizard.sayText("It's safe to shut down the factory now!", _num_dialogLength, true)
                 timer.after(_num_dialogLength, function () {
+                    bool_isNPCTalking = true
                     animation.runImageAnimation(
                     _wizard,
                     [img`
@@ -3804,6 +4197,7 @@ function wizardDialog (_wizard: Sprite) {
                     tiles.setWallAt(tiles.getTileLocation(29, 52), false)
                     createSmokePosition(472, 840)
                     timer.after(_num_dialogLength, function () {
+                        bool_isNPCTalking = true
                         sprite_questIcon = sprites.create(img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -6505,6 +6899,18 @@ function openDoorsInView () {
         }
     }
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile142`, function (sprite, location) {
+    controller.moveSprite(sprite_player, 0, 0)
+    timer.after(3000, function () {
+        music.setVolume(100)
+        game.setGameOverMessage(true, "Time:" + convertToText(_num_finalTime - _num_finalTime % 60) + "m" + convertToText(Math.round(_num_finalTime % 60 * 100) / 100) + "s")
+        game.setGameOverEffect(true, effects.confetti)
+        game.setGameOverPlayable(true, music.melodyPlayable(music.powerUp), false)
+        info.setScore(num_currentMoney)
+        game.setGameOverScoringType(game.ScoringType.HighScore)
+        game.gameOver(true)
+    })
+})
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, location) {
     flipSwitch(assets.tile`myTile63`, assets.tile`myTile64`, assets.tile`myTile65`, assets.tile`myTile66`, location.column, location.row)
     timer.after(1650, function () {
@@ -6581,54 +6987,12 @@ function setPlayerAnimations (_type: number, _delay: number) {
         _array_animSprites = [
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d c d d c d d c . 
-            . c b d c d d c d b c . 
-            . . c b d d d d b c . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c b b b b b b b b c . 
             . c c c c c c c c c c . 
-            . c d c d d d d c d c . 
-            . c c c d c c d c c c . 
-            . . . c c . . c c . . . 
-            `,
-        img`
-            . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
             . c d d c d d c d d c . 
             . c b d c d d c d b c . 
-            . . c b d d d d b c c . 
-            . c b c c c c c c d c . 
-            . c c c d d d d c c c . 
-            . . . c d c c c c . . . 
-            . . . c c . . . . . . . 
-            `,
-        img`
-            . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d c d d c d d c . 
-            . c b d c d d c d b c . 
-            . c c b d d d d b c . . 
-            . c d c c c c c c b c . 
-            . c c c d d d d c c c . 
-            . . . c c c c d c . . . 
-            . . . . . . . c c . . . 
-            `,
-        img`
-            . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d b b b b b b d c . 
-            . c b b b b b b b b c . 
-            . c b b b b b b b b c . 
             . . c b b b b b b c . . 
             . c c c c c c c c c c . 
             . c b c b b b b c b c . 
@@ -6637,26 +7001,12 @@ function setPlayerAnimations (_type: number, _delay: number) {
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d b b b b b b d c . 
+            . . c b b b b b b c . . 
             . c b b b b b b b b c . 
             . c b b b b b b b b c . 
-            . c c b b b b b b c . . 
-            . c b c c c c c c b c . 
-            . c c c b b b b c c c . 
-            . . . c c c c b c . . . 
-            . . . . . . . c c . . . 
-            `,
-        img`
-            . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d b b b b b b d c . 
-            . c b b b b b b b b c . 
-            . c b b b b b b b b c . 
+            . c c c c c c c c c c . 
+            . c d d c d d c d d c . 
+            . c b d c d d c d b c . 
             . . c b b b b b b c c . 
             . c b c c c c c c b c . 
             . c c c b b b b c c c . 
@@ -6665,101 +7015,157 @@ function setPlayerAnimations (_type: number, _delay: number) {
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d b c . 
-            . c d c d d d d d b c . 
-            . c d c d d d d b b c . 
-            . . c d b d b b b c . . 
-            . . . c c c c c c . . . 
-            . . . . c d c c . . . . 
-            . . . . c c d c . . . . 
-            . . . . c d d c . . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c b b b b b b b b c . 
+            . c c c c c c c c c c . 
+            . c d d c d d c d d c . 
+            . c b d c d d c d b c . 
+            . c c b b b b b b c . . 
+            . c b c c c c c c b c . 
+            . c c c b b b b c c c . 
+            . . . c c c c b c . . . 
+            . . . . . . . c c . . . 
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d b c . 
-            . c d c d d d d d b c . 
-            . c d c d d d d b b c . 
-            . . c d b d b b b c . . 
-            . . . c c c c c c . . . 
-            . . c d c d d c . . . . 
-            . . c c c d d c . . . . 
-            . . . c b c c d c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c c b b b b b b c c . 
+            . c b c c c b c c b c . 
+            . c b b c b c b c b c . 
+            . c b b c c b c c b c . 
+            . . c b b b b b b c . . 
+            . c c c c c c c c c c . 
+            . c b c b b b b c b c . 
+            . c c c b c c b c c c . 
+            . . . c c . . c c . . . 
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d b c . 
-            . c d c d d d d d b c . 
-            . c d c d d d d b b c . 
-            . . c d b d b b b c . . 
-            . . . c c c c c c . . . 
-            . . c b c d c d c . . . 
-            . . c c c d c c c . . . 
-            . . . c d c c b c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c c b b b b b b c c . 
+            . c b c c c b c c b c . 
+            . c b b c b c b c b c . 
+            . c b b c c b c c b c . 
+            . c c b b b b b b c . . 
+            . c b c c c c c c b c . 
+            . c c c b b b b c c c . 
+            . . . c c c c b c . . . 
+            . . . . . . . c c . . . 
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c b d d d d d d d c . 
-            . c b d d d d d c d c . 
-            . c b b d d d d c d c . 
-            . . c b b b d b d c . . 
-            . . . c c c c c c . . . 
-            . . . . c c d c . . . . 
-            . . . . c d c c . . . . 
-            . . . . c d d c . . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c c b b b b b b c c . 
+            . c b c c c b c c b c . 
+            . c b b c b c b c b c . 
+            . c b b c c b c c b c . 
+            . . c b b b b b b c c . 
+            . c b c c c c c c b c . 
+            . c c c b b b b c c c . 
+            . . . c b c c c c . . . 
+            . . . c c . . . . . . . 
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c b d d d d d d d c . 
-            . c b d d d d d c d c . 
-            . c b b d d d d c d c . 
-            . . c b b b d b d c . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c b b b b b b b c b c 
+            . c c c c c c c c b c . 
+            . c d c d d d b b b b c 
+            . c d c d b b b b b c . 
+            . . c b b b b b b c . . 
             . . . c c c c c c . . . 
-            . . . c d c d c b c . . 
-            . . . c c c d c c c . . 
-            . . . c b c c d c . . . 
+            . . . . c b c c . . . . 
+            . . . . c c b c . . . . 
+            . . . . c b b c . . . . 
             `,
         img`
             . . . c c c c c c . . . 
-            . . c d d d d d d c . . 
-            . c d d d d d d d d c . 
-            . c d d d d d d d d c . 
-            . c b d d d d d d d c . 
-            . c b d d d d d c d c . 
-            . c b b d d d d c d c . 
-            . . c b b b d b d c . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b c c . 
+            . c b b b b b b b c b c 
+            . c c c c c c c c b c . 
+            . c d c d d d b b b b c 
+            . c d c d b b b b b c . 
+            . . c b b b b b b c . . 
             . . . c c c c c c . . . 
-            . . . . c d d c d c . . 
-            . . . . c d d c c c . . 
-            . . . c d c c b c . . . 
+            . . c b c b b c . . . . 
+            . . c c c b b c . . . . 
+            . . . c b c c b c . . . 
+            `,
+        img`
+            . . . c c c c c c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            . c b b b b b b b c b c 
+            . c c c c c c c c b c . 
+            . c d c d d d b b b b c 
+            . c d c d b b b b b c . 
+            . . c b b b b b b c . . 
+            . . . c c c c c c . . . 
+            . . c b c b c b c . . . 
+            . . c c c b c c c . . . 
+            . . . c b c c b c . . . 
+            `,
+        img`
+            . . . c c c c c c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            c b c b b b b b b b c . 
+            . c b c c c c c c c c . 
+            c b b b b d d d c d c . 
+            . c b b b b b d c d c . 
+            . . c b b b b b b c . . 
+            . . . c c c c c c . . . 
+            . . . . c c b c . . . . 
+            . . . . c b c c . . . . 
+            . . . . c b b c . . . . 
+            `,
+        img`
+            . . . c c c c c c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            c b c b b b b b b b c . 
+            . c b c c c c c c c c . 
+            c b b b b d d d c d c . 
+            . c b b b b b d c d c . 
+            . . c b b b b b b c . . 
+            . . . c c c c c c . . . 
+            . . . c b c b c b c . . 
+            . . . c c c b c c c . . 
+            . . . c b c c b c . . . 
+            `,
+        img`
+            . . . c c c c c c . . . 
+            . . c b b b b b b c . . 
+            . c b b b b b b b b c . 
+            c b c b b b b b b b c . 
+            . c b c c c c c c c c . 
+            c b b b b d d d c d c . 
+            . c b b b b b d c d c . 
+            . . c b b b b b b c . . 
+            . . . c c c c c c . . . 
+            . . . . c b b c b c . . 
+            . . . . c b b c c c . . 
+            . . . c b c c b c . . . 
             `,
         img`
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
             . . . . . . . c c c c c . . 
-            . . . c c . c d c d c d c . 
-            . c c c d c d d d c d d d c 
-            . c d c c c b d c d c d d c 
-            . . c d d c b d d d d d d c 
-            . . c d d c b d c d c d d c 
-            . c d c c c d d d c d d d c 
-            . c c c d c b d c d c d b c 
-            . . . c c . c b b b b b c . 
+            . . . c c . c d c d c b c . 
+            . c c c b c b d d c d b b c 
+            . c b c c c c d c d c b b c 
+            . . c b b c c d d d d b b c 
+            . . c b b c b d c d c b b c 
+            . c b c c c b d d c d b b c 
+            . c c c b c b d c d c b b c 
+            . . . c c . c b d d d b c . 
             . . . . . . . c c c c c . . 
             . . . . . . . . . . . . . . 
             `
@@ -7083,6 +7489,13 @@ sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemy, function (sprite, otherSpr
         damageBat(otherSprite, -1, sprite_player)
     }
 })
+function setPaletteGreen () {
+    palette_white = color.parseColorString("#e5cdc4")
+    palette_gray = color.parseColorString("#a4839f")
+    palette_black = color.parseColorString("#5c406c")
+    palette_colourLight = color.parseColorString("#78dc52")
+    palette_colourDark = color.parseColorString("#249ca3")
+}
 /**
  * Player Funcs
  */
@@ -7224,6 +7637,16 @@ sprites.onOverlap(SpriteKind.EnemyWaker, SpriteKind.BatSleeping, function (sprit
         wakeUpBat(otherSprite)
     }
 })
+/**
+ * Game Funcs
+ */
+function setPaletteRed () {
+    palette_white = color.parseColorString("#e5cdc4")
+    palette_gray = color.parseColorString("#98807B")
+    palette_black = color.parseColorString("#4a3232")
+    palette_colourLight = color.parseColorString("#ff667a")
+    palette_colourDark = color.parseColorString("#A54C56")
+}
 function isInView (_x: number, _y: number, _camera: Sprite) {
     if (_x < _camera.x + 96 && _x > _camera.x - 96 && (_y < _camera.y + 76 && _y > _camera.y - 76)) {
         return true
@@ -7258,8 +7681,10 @@ function destroyDungeonMusicOutOfView () {
     }
 }
 function updateCamera (_camera: Sprite, _player: Sprite) {
-    _camera.x = _player.x - 8 - (_player.x - 8) % 160 + 88
-    _camera.y = _player.y - 8 - (_player.y - 8) % 128 + 72
+    if (!(bool_isGameOver)) {
+        _camera.x = _player.x - 8 - (_player.x - 8) % 160 + 88
+        _camera.y = _player.y - 8 - (_player.y - 8) % 128 + 72
+    }
     if (!(bool_isTransition) && !(isInView(sprite_cameraFollow.x, sprite_cameraFollow.y, sprite_cameraControl))) {
         createTreesInView()
         createDungeonMusicInView()
@@ -7318,6 +7743,8 @@ let _num_knockbackX = 0
 let num_lastDialogNPC3 = 0
 let sprite_dungeonMusic: Sprite = null
 let text_moneyAdd: TextSprite = null
+let _num_finalTime = 0
+let _sprite_lever: Sprite = null
 let sprite_enemyWaker: Sprite = null
 let bool_isDungeonMusic = false
 let _num_bushPitch = 0
@@ -7330,6 +7757,11 @@ let sprite_NPC: Sprite = null
 let _num_dialogLength = 0
 let num_lastDialogNPC4 = 0
 let bool_isNPCTalking = false
+let palette_black = 0
+let palette_gray = 0
+let palette_colourLight = 0
+let palette_colourDark = 0
+let palette_white = 0
 let _sprite_debris: Sprite = null
 let sprite_bat: Sprite = null
 let sprite_hudHealth: Sprite = null
@@ -7363,14 +7795,12 @@ let num_moneyValue1 = 0
 let bool_torchChange = false
 let num_lastDialogNPC2 = 0
 let num_lastDialogNPC1 = 0
-color.setColor(15, color.rgb(92, 64, 108))
-color.setColor(1, color.rgb(240, 216, 207))
+let bool_isGameOver = false
 music.setVolume(255)
 tiles.setCurrentTilemap(tilemap`Dungeon`)
-let num_isGameover = 0
+bool_isGameOver = false
 let bool_mapOut = false
 createPlayerController(75)
-setPlayerAnimations(2, 100)
 createHUD()
 createCameraController()
 createTreesInView()
@@ -7386,10 +7816,26 @@ _bool_isEnemyRoom = true
 let PlayerDead = true
 bool_isMusic = true
 bool_hasQuest = true
+let bool_isSettingUp = true
 num_winCondition = 0
 num_playerSpeed = 75
 createLevelCompleteArray()
 game.onUpdate(function () {
+    if (bool_isSettingUp) {
+        bool_isSettingUp = false
+        setPaletteGreen()
+        if (controller.right.isPressed()) {
+            setPlayerAnimations(1, 100)
+            sprite_player.sayText("Ninja mode!", 2000, false)
+        } else {
+            setPlayerAnimations(2, 100)
+        }
+        if (controller.up.isPressed()) {
+            sprite_player.sayText("Red mode!", 2000, false)
+            setPaletteRed()
+        }
+        applyPalette()
+    }
     checkEnemyRoomFinished()
     animatePlayer()
     updateHUD()
@@ -7426,9 +7872,6 @@ game.onUpdateInterval(500, function () {
     updateTorches()
 })
 game.onUpdateInterval(100, function () {
-    if (num_isGameover == 2) {
-        pause(500)
-    }
     if (sprites.allOfKind(SpriteKind.DungeonMusic).length > 0) {
         bool_isDungeonMusic = true
     } else {

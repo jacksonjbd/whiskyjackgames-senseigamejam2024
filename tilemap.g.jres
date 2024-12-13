@@ -982,6 +982,18 @@
         "tilemapTile": true,
         "displayName": "Empty5"
     },
+    "tile164": {
+        "data": "hwQQABAAAABmZszMzMxszHZnzGZmzGzMdmfMxsxmZsx2Z8zG3LtsxmZmzMbMvMvMxszMxszMZsxstszGzMxmzMZsy8bMzGbMxmzLxszMZsxstszGzMxmzMbMzMbMzGbMZmbMxsy8y8x2Z8zG3LtsxnZnzMbMZmbMdmfMZmbMbMxmZszMzMxszA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "Empty6"
+    },
+    "tile165": {
+        "data": "hwQQABAAAADMzMzMzMzMzMy8u7u7u7vMzLzMzMvMvMzMvMzMy8y8zMzMzMzMzMzMzLy7u7u7u8zMzLvMzMzMzMzMzLvMzMzMzMzMzLvMzMzMvLu7u7u7zMzMzMzMzMzMzLy7u7u7u8zMvMzMzMy8zMy8zMzMzLzMzMy7u7u7y8zMzMzMzMzMzA==",
+        "mimeType": "image/x-mkcd-f4",
+        "tilemapTile": true,
+        "displayName": "myTile142"
+    },
     "level1": {
         "id": "level1",
         "mimeType": "application/mkcd-tilemap",
@@ -1166,7 +1178,9 @@
             "myTiles.tile129",
             "myTiles.tile130",
             "myTiles.tile162",
-            "myTiles.tile163"
+            "myTiles.tile163",
+            "myTiles.tile122",
+            "myTiles.tile165"
         ],
         "displayName": "Dungeon"
     },
