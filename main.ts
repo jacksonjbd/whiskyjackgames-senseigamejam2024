@@ -22,16 +22,14 @@ namespace SpriteKind {
     export const userInterface = SpriteKind.create()
     export const NPC = SpriteKind.create()
     export const Interact = SpriteKind.create()
-    export const NPC2 = SpriteKind.create()
+    export const Quest = SpriteKind.create()
     export const BatSleeping = SpriteKind.create()
     export const EnemyWaker = SpriteKind.create()
     export const EnemyHurt = SpriteKind.create()
     export const Tree = SpriteKind.create()
     export const Pickup = SpriteKind.create()
+    export const NPC3 = SpriteKind.create()
 }
-/**
- * Camera Funcs
- */
 /**
  * Enemy Funcs
  */
@@ -1693,6 +1691,9 @@ scene.onOverlapTile(SpriteKind.Sword, assets.tile`BigPot`, function (sprite, loc
 sprites.onOverlap(SpriteKind.Enemy, SpriteKind.BatSleeping, function (sprite, otherSprite) {
     wakeUpBat(otherSprite)
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile135`, function (sprite, location) {
+    flipSwitch(assets.tile`myTile136`, assets.tile`myTile101`, assets.tile`myTile102`, assets.tile`myTile103`, location.column, location.row)
+})
 function wakeUpRobots () {
     for (let value of sprites.allOfKind(SpriteKind.BatSleeping)) {
         if (sprites.readDataString(value, "data_type") == "bat") {
@@ -1701,37 +1702,26 @@ function wakeUpRobots () {
     }
 }
 function flipSwitch (_switchDown: Image, _blockUp: Image, _blockMid: Image, _blockDown: Image, _column: number, _row: number) {
-    tiles.setTileAt(tiles.getTileLocation(_column, _row), assets.tile`myTile69`)
+    tiles.setTileAt(tiles.getTileLocation(_column, _row), _switchDown)
+    music.play(music.createSoundEffect(WaveShape.Noise, 3300, 330, 255, 81, 50, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     timer.after(100, function () {
         controller.moveSprite(sprite_player, 0, 0)
         bool_isPlayerFrozen = true
-        for (let value of tiles.getTilesByType(_switchDown)) {
-            tiles.setTileAt(value, assets.tile`myTile57`)
-        }
-        tiles.setTileAt(tiles.getTileLocation(_column, _row), _switchDown)
-        music.play(music.createSoundEffect(WaveShape.Noise, 3300, 330, 255, 81, 50, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
         timer.after(500, function () {
             scene.cameraShake(2, 500)
             music.play(music.createSoundEffect(WaveShape.Noise, 464, 419, 112, 40, 900, SoundExpressionEffect.Vibrato, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             music.play(music.createSoundEffect(WaveShape.Noise, 196, 196, 85, 85, 900, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             music.play(music.createSoundEffect(WaveShape.Sawtooth, 1712, 1757, 23, 0, 800, SoundExpressionEffect.Warble, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             for (let value of tiles.getTilesByType(_blockUp)) {
-                tiles.setTileAt(value, assets.tile`myTile61`)
-            }
-            for (let value of tiles.getTilesByType(_blockDown)) {
                 tiles.setTileAt(value, _blockMid)
             }
             timer.after(500, function () {
                 music.play(music.createSoundEffect(WaveShape.Noise, 2559, 1356, 255, 81, 25, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                 music.play(music.createSoundEffect(WaveShape.Noise, 286, 63, 184, 0, 150, SoundExpressionEffect.Vibrato, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                 music.play(music.createSoundEffect(WaveShape.Triangle, 152, 63, 255, 0, 150, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
-                for (let value of tiles.getTilesByType(assets.tile`myTile61`)) {
+                for (let value of tiles.getTilesByType(_blockMid)) {
                     tiles.setTileAt(value, _blockDown)
                     tiles.setWallAt(value, false)
-                }
-                for (let value of tiles.getTilesByType(_blockMid)) {
-                    tiles.setTileAt(value, _blockUp)
-                    tiles.setWallAt(value, true)
                 }
                 timer.after(500, function () {
                     controller.moveSprite(sprite_player, 75, 75)
@@ -1748,24 +1738,94 @@ function createNPCInView () {
     bool_isNPCTalking = false
     for (let value of tiles.getTilesByType(assets.tile`myTile49`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
-            sprite_NPC1 = sprites.create(assets.image`TutorialGuyo`, SpriteKind.NPC)
-            sprite_NPC1.z = 100
-            tiles.placeOnTile(sprite_NPC1, value)
+            sprite_NPC = sprites.create(assets.image`TutorialGuyo`, SpriteKind.NPC)
+            sprites.setDataString(sprite_NPC, "data_type", "wizard")
+            sprite_NPC.z = 100
+            tiles.placeOnTile(sprite_NPC, value)
+            if (bool_hasQuest) {
+                sprite_questIcon = sprites.create(img`
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Quest)
+                sprite_questIcon.z = 101
+                tiles.placeOnTile(sprite_questIcon, value)
+                sprite_questIcon.y += -14
+            }
         }
     }
-    for (let value of tiles.getTilesByType(assets.tile`myTile60`)) {
-        if (isInView(value.x, value.y, sprite_cameraControl)) {
-            sprite_NPC2 = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC2)
-            sprite_NPC2.z = 100
-            tiles.placeOnTile(sprite_NPC2, value)
+    if (num_winCondition == 0) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile60`)) {
+            if (isInView(value.x, value.y, sprite_cameraControl)) {
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat1")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
+            }
         }
     }
-    if (_num_winCondition > 0) {
+    if (num_winCondition == 1) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile85`)) {
+            if (isInView(value.x, value.y, sprite_cameraControl)) {
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat2")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
+            }
+        }
+    }
+    if (num_winCondition == 2) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile86`)) {
+            if (isInView(value.x, value.y, sprite_cameraControl)) {
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat3")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
+            }
+        }
+    }
+    if (num_winCondition > 0) {
         for (let value of tiles.getTilesByType(assets.tile`myTile20`)) {
             if (isInView(value.x, value.y, sprite_cameraControl)) {
-                sprite_NPC2 = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC2)
-                sprite_NPC2.z = 100
-                tiles.placeOnTile(sprite_NPC2, value)
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat1")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
+                tiles.setWallAt(value, true)
+            }
+        }
+    }
+    if (num_winCondition > 1) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile61`)) {
+            if (isInView(value.x, value.y, sprite_cameraControl)) {
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat2")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
+                tiles.setWallAt(value, true)
+            }
+        }
+    }
+    if (num_winCondition > 2) {
+        for (let value of tiles.getTilesByType(assets.tile`myTile69`)) {
+            if (isInView(value.x, value.y, sprite_cameraControl)) {
+                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprites.setDataString(sprite_NPC, "data_type", "cat3")
+                sprite_NPC.z = 100
+                tiles.placeOnTile(sprite_NPC, value)
                 tiles.setWallAt(value, true)
             }
         }
@@ -2418,88 +2478,14 @@ function playBatHurt () {
     ), music.PlaybackMode.InBackground)
 }
 sprites.onOverlap(SpriteKind.Interact, SpriteKind.NPC, function (sprite, otherSprite) {
-    if (!(bool_isNPCTalking)) {
-        bool_isNPCTalking = true
-        animation.runImageAnimation(
-        otherSprite,
-        [img`
-            . . . . . . . . c c c c c . . . 
-            . . . . . . c c b b b b b c . . 
-            . . . . c c b b b b b c b c . . 
-            . . c c d d d d d d d d c c . . 
-            . c c b b b b b b b b b b c c . 
-            c b b b b b b b b b b b b b b c 
-            c c c c c c c c c c c c c c c c 
-            . . . c b b b b b b b b c . . . 
-            . . . c b c c b b c c b c . . . 
-            . . . c b d d d d d d b c . . . 
-            . . . . c b d b b d b c . . . . 
-            . . . c c c c c c c c c c . . . 
-            . . . c d c b b b b c d c . . . 
-            . . . c c c b b b b c c c . . . 
-            . . . . . c c c c c c . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `,img`
-            . . . . . . . . c c c c . . . . 
-            . . . . . . c c b b b b c . . . 
-            . . . . . c b b b b c c b c . . 
-            . . . . c b b b b b b c c . . . 
-            . c c c d b b b b b b d c c c . 
-            c b b b b d d d d d d b b b b c 
-            c c c b b b b b b b b b b c c c 
-            . . c c c c c c c c c c c c . . 
-            . . . c b b b b b b b b c . . . 
-            . . . c b c c b b c c b c . . . 
-            . . . . c b d d d d b c . . . . 
-            . . . c c c c c c c c c c . . . 
-            . . . c d c b b b b c d c . . . 
-            . . . c c c b b b b c c c . . . 
-            . . . . . c c c c c c . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        350,
-        true
-        )
-        if (num_lastDialogueNPC1 == 0) {
-            otherSprite.sayText("Please save my friends from this factory!", 3000, true)
-            music.play(music.createSoundEffect(WaveShape.Square, 400, 600, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            music.play(music.createSoundEffect(WaveShape.Sine, 1, 0, 0, 0, 2500, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            num_lastDialogueNPC1 = 1
-        } else if (num_lastDialogueNPC1 == 1) {
-            otherSprite.sayText("There's evil robots inside!", 2500, true)
-            music.play(music.createSoundEffect(WaveShape.Square, 400, 600, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            music.play(music.createSoundEffect(WaveShape.Sine, 1, 0, 0, 0, 1000, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            num_lastDialogueNPC1 = 2
-        } else {
-            otherSprite.sayText("Hahaha! I'm old!", 2000, true)
-            music.play(music.createSoundEffect(WaveShape.Square, 400, 600, 255, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            music.play(music.createSoundEffect(WaveShape.Sine, 1, 0, 0, 0, 1000, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.UntilDone)
-            num_lastDialogueNPC1 = 0
-        }
-        animation.runImageAnimation(
-        otherSprite,
-        [img`
-            . . . . . . . . c c c c . . . . 
-            . . . . . . c c b b b b c . . . 
-            . . . . . c b b b b c c b c . . 
-            . . . . c b b b b b b c c . . . 
-            . c c c d b b b b b b d c c c . 
-            c b b b b d d d d d d b b b b c 
-            c c c b b b b b b b b b b c c c 
-            . . c c c c c c c c c c c c . . 
-            . . . c b b b b b b b b c . . . 
-            . . . c b c c b b c c b c . . . 
-            . . . . c b d d d d b c . . . . 
-            . . . c c c c c c c c c c . . . 
-            . . . c d c b b b b c d c . . . 
-            . . . c c c b b b b c c c . . . 
-            . . . . . c c c c c c . . . . . 
-            . . . . . . . . . . . . . . . . 
-            `],
-        200,
-        false
-        )
-        bool_isNPCTalking = false
+    if (sprites.readDataString(otherSprite, "data_type") == "wizard") {
+        wizardDialog(otherSprite)
+    } else if (sprites.readDataString(otherSprite, "data_type") == "cat1") {
+        cat1Dialog(otherSprite)
+    } else if (sprites.readDataString(otherSprite, "data_type") == "cat2") {
+        cat1Dialog(otherSprite)
+    } else if (sprites.readDataString(otherSprite, "data_type") == "cat3") {
+        cat1Dialog(otherSprite)
     }
 })
 function hurtPlayer (_player: Sprite, _enemy: Sprite) {
@@ -2528,6 +2514,7 @@ function cameraTransitionEnd () {
     sprite_player.follow(sprite_cameraControl, 0)
     sprite_player.setVelocity(0, 0)
     controller.moveSprite(sprite_player, 75, 75)
+    bool_isPlayerFrozen = false
 }
 function isLevelComplete () {
     if (array_levelComplete2D[(sprite_cameraControl.tilemapLocation().column - 5) / 10][(sprite_cameraControl.tilemapLocation().row - 4) / 8] == 1) {
@@ -2948,10 +2935,175 @@ sprites.onOverlap(SpriteKind.EnemyWaker, SpriteKind.Enemy, function (sprite, oth
         }
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile140`, function (sprite, location) {
+    flipSwitch(assets.tile`myTile141`, assets.tile`myTile137`, assets.tile`myTile138`, assets.tile`myTile139`, location.column, location.row)
+})
 function destroyTreesOutOfView () {
     for (let value of sprites.allOfKind(SpriteKind.Tree)) {
         if (!(isInView(value.x, value.y, sprite_cameraControl))) {
             sprites.destroy(value)
+        }
+    }
+}
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile90`, function (sprite, location) {
+    flipSwitch(assets.tile`myTile91`, assets.tile`myTile87`, assets.tile`myTile88`, assets.tile`myTile89`, location.column, location.row)
+    timer.after(1650, function () {
+        completeLevel()
+        tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
+        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
+        num_winCondition = 3
+    })
+})
+function playWizardNoise () {
+    music.play(music.createSoundEffect(
+    WaveShape.Square,
+    400,
+    randint(500, 650),
+    80,
+    0,
+    100,
+    SoundExpressionEffect.None,
+    InterpolationCurve.Linear
+    ), music.PlaybackMode.UntilDone)
+}
+function wizardDialog (_wizard: Sprite) {
+    bool_hasQuest = false
+    sprites.destroyAllSpritesOfKind(SpriteKind.Quest)
+    if (!(bool_isNPCTalking)) {
+        bool_isNPCTalking = true
+        animation.runImageAnimation(
+        _wizard,
+        [img`
+            . . . . . . . . c c c c c . . . 
+            . . . . . . c c b b b b b c . . 
+            . . . . c c b b b b b c b c . . 
+            . . c c d d d d d d d d c c . . 
+            . c c b b b b b b b b b b c c . 
+            c b b b b b b b b b b b b b b c 
+            c c c c c c c c c c c c c c c c 
+            . . . c b b b b b b b b c . . . 
+            . . . c b c c b b c c b c . . . 
+            . . . c b d d d d d d b c . . . 
+            . . . . c b d b b d b c . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . . c d c b b b b c d c . . . 
+            . . . c c c b b b b c c c . . . 
+            . . . . . c c c c c c . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . c c c c . . . . 
+            . . . . . . c c b b b b c . . . 
+            . . . . . c b b b b c c b c . . 
+            . . . . c b b b b b b c c . . . 
+            . c c c d b b b b b b d c c c . 
+            c b b b b d d d d d d b b b b c 
+            c c c b b b b b b b b b b c c c 
+            . . c c c c c c c c c c c c . . 
+            . . . c b b b b b b b b c . . . 
+            . . . c b c c b b c c b c . . . 
+            . . . . c b d d d d b c . . . . 
+            . . . c c c c c c c c c c . . . 
+            . . . c d c b b b b c d c . . . 
+            . . . c c c b b b b c c c . . . 
+            . . . . . c c c c c c . . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
+        if (num_lastDialogueNPC1 == 0) {
+            _num_dialogLength = 3000
+            _wizard.sayText("Please save my friends from this factory!", _num_dialogLength, true)
+            playWizardNoise()
+            num_lastDialogueNPC1 = 1
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _wizard,
+                [img`
+                    . . . . . . . . c c c c . . . . 
+                    . . . . . . c c b b b b c . . . 
+                    . . . . . c b b b b c c b c . . 
+                    . . . . c b b b b b b c c . . . 
+                    . c c c d b b b b b b d c c c . 
+                    c b b b b d d d d d d b b b b c 
+                    c c c b b b b b b b b b b c c c 
+                    . . c c c c c c c c c c c c . . 
+                    . . . c b b b b b b b b c . . . 
+                    . . . c b c c b b c c b c . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d c b b b b c d c . . . 
+                    . . . c c c b b b b c c c . . . 
+                    . . . . . c c c c c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                false
+                )
+            })
+        } else if (num_lastDialogueNPC1 == 1) {
+            _num_dialogLength = 2500
+            _wizard.sayText("There's evil robots inside!", _num_dialogLength, true)
+            playWizardNoise()
+            num_lastDialogueNPC1 = 2
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _wizard,
+                [img`
+                    . . . . . . . . c c c c . . . . 
+                    . . . . . . c c b b b b c . . . 
+                    . . . . . c b b b b c c b c . . 
+                    . . . . c b b b b b b c c . . . 
+                    . c c c d b b b b b b d c c c . 
+                    c b b b b d d d d d d b b b b c 
+                    c c c b b b b b b b b b b c c c 
+                    . . c c c c c c c c c c c c . . 
+                    . . . c b b b b b b b b c . . . 
+                    . . . c b c c b b c c b c . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d c b b b b c d c . . . 
+                    . . . c c c b b b b c c c . . . 
+                    . . . . . c c c c c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                false
+                )
+            })
+        } else {
+            _num_dialogLength = 2000
+            _wizard.sayText("Hahaha! I'm old!", _num_dialogLength, true)
+            playWizardNoise()
+            num_lastDialogueNPC1 = 0
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _wizard,
+                [img`
+                    . . . . . . . . c c c c . . . . 
+                    . . . . . . c c b b b b c . . . 
+                    . . . . . c b b b b c c b c . . 
+                    . . . . c b b b b b b c c . . . 
+                    . c c c d b b b b b b d c c c . 
+                    c b b b b d d d d d d b b b b c 
+                    c c c b b b b b b b b b b c c c 
+                    . . c c c c c c c c c c c c . . 
+                    . . . c b b b b b b b b c . . . 
+                    . . . c b c c b b c c b c . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d c b b b b c d c . . . 
+                    . . . c c c b b b b c c c . . . 
+                    . . . . . c c c c c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                false
+                )
+            })
         }
     }
 }
@@ -3761,13 +3913,12 @@ function playBatDie () {
     ), music.PlaybackMode.InBackground)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile57`, function (sprite, location) {
+    flipSwitch(assets.tile`myTile58`, assets.tile`myTile56`, assets.tile`myTile67`, assets.tile`myTile59`, location.column, location.row)
     timer.after(1650, function () {
-        if (sprites.allOfKind(SpriteKind.NPC2).length > 0) {
-            completeLevel()
-            playCutsceneSaveNPC(sprite_NPC2, 0, 75, 2500, "yippee!", 2)
-            _num_winCondition += 1
-            tiles.setWallAt(sprite_NPC2.tilemapLocation(), false)
-        }
+        completeLevel()
+        tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
+        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
+        num_winCondition = 1
     })
 })
 function knockback (_sprite: Sprite, _origin: Sprite, _speed: number, _time: number) {
@@ -3820,225 +3971,6 @@ function playBatAttack () {
     InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
 }
-sprites.onOverlap(SpriteKind.Interact, SpriteKind.NPC2, function (sprite, otherSprite) {
-    if (!(bool_isNPCTalking)) {
-        bool_isNPCTalking = true
-        if (num_lastDialogueNPC2 == 0) {
-            animation.runImageAnimation(
-            otherSprite,
-            [img`
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d c d d d c d d c . . . . . 
-                . c c d c d c d c d c . . . . . 
-                . c d d d b d d d d c . . . c c 
-                . c d d b b b d d d c . . c d c 
-                . c c d d d d d d c c . c d c . 
-                . . c c c c c c c c c c c d c . 
-                . . . c d d c d d d b d d c . . 
-                . . . c d c d b d d d c c . . . 
-                . . . c d c c c c c d c . . . . 
-                . . . c c . . . . . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d c d d d c d c . . . . . 
-                . c d c d c d c d c c . . . . . 
-                . c d d d d b d d d c . . . c c 
-                . c d d d b b b d d c . . c d c 
-                . c c d d b b b d c c . c d c . 
-                . . c c c c c c c c c c c d c . 
-                . . . c d d d d d d b d d c . . 
-                . . c d b d d d b d d c c . . . 
-                . . c c c c c d c c d c . . . . 
-                . . . . . . c c . . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `],
-            350,
-            true
-            )
-            _num_dialogLength = 2500
-            otherSprite.sayText("Thank you for saving me!!", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 1
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                otherSprite,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d c d d d c d d c . . . . . 
-                    . c c d c d c d c d c c c . . . 
-                    . c d d d b d d d d c c d c . . 
-                    . c c d b b b d d c c . c d c . 
-                    . . c c c c c c c c c c c d c . 
-                    . . . c d d d d d d b d d c . . 
-                    . . . c d d d d b d d c c . . . 
-                    . . . c d c c d c c d c . . . . 
-                    . . . c c . c c . . c c . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                true
-                )
-            })
-        } else if (num_lastDialogueNPC2 == 1) {
-            animation.runImageAnimation(
-            otherSprite,
-            [img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c c . . c c c c . . . . . 
-                . c d d c c c c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . c c . . 
-                . c d d c d c d d d c c d c . . 
-                . c c c d d d c c d c c d c . . 
-                . c b d d b d d b d c c d c . . 
-                . c c d b b b d b c c c d c . . 
-                . . c c c c c c c c b d c . . . 
-                . . . c b c d d b d d c . . . . 
-                . . . c b c c c c c d c . . . . 
-                . . . c c c . . . c c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c c . . c c c c . . . . . 
-                . c d d c c c c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . c c . . 
-                . c d d d c d c d d c c d c . . 
-                . c d c c d d d c c c c d c . . 
-                . c d b d d b d d b c c d c . . 
-                . c c b d b b b d c c c d c . . 
-                . . c c c b b b c c b d c . . . 
-                . . c d d c c c b d d c . . . . 
-                . . c c c c c b c c d c . . . . 
-                . . . . . . c c c . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `],
-            350,
-            true
-            )
-            _num_dialogLength = 2000
-            otherSprite.sayText("It was so scary...", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 2
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                otherSprite,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d d c d c d d d c . . . . . 
-                    . c c c d d d c c d c . . . . . 
-                    . c b d d b d d d b c . . . c c 
-                    . c c d b b b d d c c . . c d c 
-                    . . c c c c c c c c c c c c d c 
-                    . . . c d d d d d d b d d d c . 
-                    . . . c d d d d b d d c c c . . 
-                    . . . c d c c d c c d c . . . . 
-                    . . . c c . c c . . c c . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
-        } else {
-            animation.runImageAnimation(
-            otherSprite,
-            [img`
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d c c d d d c c c . . . . . 
-                . c b d d d b d d b c . . . . . 
-                . c c d d b b b d c c . . . . . 
-                . . c c c c c c c c c c c . . . 
-                . . . c d d d d d d b d d c . . 
-                . . . c d d d d b d c c d c . . 
-                . . . c d c c d c c d d b c . . 
-                . . . c c . c c . c c c c . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d c c d d d c c c . . . . . 
-                . c b d d d b d d b c . . . . . 
-                . c c d d b b b d c c c c . . . 
-                . . c c c b b b c c b d d c . . 
-                . . . c b c c c b b c c d c . . 
-                . . . c d c c d c c d d b c . . 
-                . . . c c . c c . c c c c . . . 
-                . . . . . . . . . . . . . . . . 
-                `],
-            350,
-            true
-            )
-            _num_dialogLength = 3500
-            otherSprite.sayText("The humidity in here has been horrible for my fur.", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 0
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                otherSprite,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d c c d d d c c c . . . . . 
-                    . c b d d d b d d d c . . . . . 
-                    . c c d d b b b d c c . . . . . 
-                    . . c c c c c c c c c c c . . . 
-                    . . . c d d d d d d b d d c . . 
-                    . . . c d d d d b d c c d c . . 
-                    . . . c d c c d c c d d b c . . 
-                    . . . c c . c c . c c c c . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
-        }
-    }
-})
 function wakeUpBat (_bat: Sprite) {
     _bat.setKind(SpriteKind.Enemy)
     playBatNoise()
@@ -4492,7 +4424,13 @@ function openDoorsInView () {
     }
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, location) {
-	
+    flipSwitch(assets.tile`myTile63`, assets.tile`myTile64`, assets.tile`myTile65`, assets.tile`myTile66`, location.column, location.row)
+    timer.after(1650, function () {
+        completeLevel()
+        tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
+        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
+        num_winCondition = 2
+    })
 })
 function createLevelCompleteArray () {
     array_levelComplete2D = [
@@ -4552,6 +4490,9 @@ function createLevelCompleteArray () {
     ]
     ]
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile95`, function (sprite, location) {
+    flipSwitch(assets.tile`myTile96`, assets.tile`myTile92`, assets.tile`myTile93`, assets.tile`myTile94`, location.column, location.row)
+})
 function setPlayerAnimations (_type: number, _delay: number) {
     _array_animSprites = []
     if (_type == 1) {
@@ -4934,6 +4875,225 @@ function setPlayerAnimations (_type: number, _delay: number) {
     anim_walkRight.addAnimationFrame(_array_animSprites[9])
     animation.attachAnimation(sprite_player, anim_walkRight)
 }
+function cat1Dialog (_cat1: Sprite) {
+    if (!(bool_isNPCTalking)) {
+        bool_isNPCTalking = true
+        if (num_lastDialogueNPC2 == 0) {
+            animation.runImageAnimation(
+            _cat1,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d c d d d c d d c . . . . . 
+                . c c d c d c d c d c . . . . . 
+                . c d d d b d d d d c . . . c c 
+                . c d d b b b d d d c . . c d c 
+                . c c d d d d d d c c . c d c . 
+                . . c c c c c c c c c c c d c . 
+                . . . c d d c d d d b d d c . . 
+                . . . c d c d b d d d c c . . . 
+                . . . c d c c c c c d c . . . . 
+                . . . c c . . . . . c c . . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d c d d d c d c . . . . . 
+                . c d c d c d c d c c . . . . . 
+                . c d d d d b d d d c . . . c c 
+                . c d d d b b b d d c . . c d c 
+                . c c d d b b b d c c . c d c . 
+                . . c c c c c c c c c c c d c . 
+                . . . c d d d d d d b d d c . . 
+                . . c d b d d d b d d c c . . . 
+                . . c c c c c d c c d c . . . . 
+                . . . . . . c c . . c c . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            350,
+            true
+            )
+            _num_dialogLength = 2500
+            _cat1.sayText("Thank you for saving me!!", _num_dialogLength, true)
+            playCatNoise()
+            num_lastDialogueNPC2 = 1
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _cat1,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d c d d d c d d c . . . . . 
+                    . c c d c d c d c d c c c . . . 
+                    . c d d d b d d d d c c d c . . 
+                    . c c d b b b d d c c . c d c . 
+                    . . c c c c c c c c c c c d c . 
+                    . . . c d d d d d d b d d c . . 
+                    . . . c d d d d b d d c c . . . 
+                    . . . c d c c d c c d c . . . . 
+                    . . . c c . c c . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                true
+                )
+            })
+        } else if (num_lastDialogueNPC2 == 1) {
+            animation.runImageAnimation(
+            _cat1,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . c c c c . . c c c c . . . . . 
+                . c d d c c c c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . c c . . 
+                . c d d c d c d d d c c d c . . 
+                . c c c d d d c c d c c d c . . 
+                . c b d d b d d b d c c d c . . 
+                . c c d b b b d b c c c d c . . 
+                . . c c c c c c c c b d c . . . 
+                . . . c b c d d b d d c . . . . 
+                . . . c b c c c c c d c . . . . 
+                . . . c c c . . . c c c . . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . c c c c . . c c c c . . . . . 
+                . c d d c c c c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . c c . . 
+                . c d d d c d c d d c c d c . . 
+                . c d c c d d d c c c c d c . . 
+                . c d b d d b d d b c c d c . . 
+                . c c b d b b b d c c c d c . . 
+                . . c c c b b b c c b d c . . . 
+                . . c d d c c c b d d c . . . . 
+                . . c c c c c b c c d c . . . . 
+                . . . . . . c c c . c c . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            350,
+            true
+            )
+            _num_dialogLength = 2000
+            _cat1.sayText("It was so scary...", _num_dialogLength, true)
+            playCatNoise()
+            num_lastDialogueNPC2 = 2
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _cat1,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d c d c d d d c . . . . . 
+                    . c c c d d d c c d c . . . . . 
+                    . c b d d b d d d b c . . . c c 
+                    . c c d b b b d d c c . . c d c 
+                    . . c c c c c c c c c c c c d c 
+                    . . . c d d d d d d b d d d c . 
+                    . . . c d d d d b d d c c c . . 
+                    . . . c d c c d c c d c . . . . 
+                    . . . c c . c c . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                false
+                )
+            })
+        } else {
+            animation.runImageAnimation(
+            _cat1,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d c c d d d c c c . . . . . 
+                . c b d d d b d d b c . . . . . 
+                . c c d d b b b d c c . . . . . 
+                . . c c c c c c c c c c c . . . 
+                . . . c d d d d d d b d d c . . 
+                . . . c d d d d b d c c d c . . 
+                . . . c d c c d c c d d b c . . 
+                . . . c c . c c . c c c c . . . 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d c c d d d c c c . . . . . 
+                . c b d d d b d d b c . . . . . 
+                . c c d d b b b d c c c c . . . 
+                . . c c c b b b c c b d d c . . 
+                . . . c b c c c b b c c d c . . 
+                . . . c d c c d c c d d b c . . 
+                . . . c c . c c . c c c c . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            350,
+            true
+            )
+            _num_dialogLength = 3500
+            _cat1.sayText("The humidity in here has been horrible for my fur.", _num_dialogLength, true)
+            playCatNoise()
+            num_lastDialogueNPC2 = 0
+            timer.after(_num_dialogLength, function () {
+                bool_isNPCTalking = false
+                animation.runImageAnimation(
+                _cat1,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d c c d d d c c c . . . . . 
+                    . c b d d d b d d d c . . . . . 
+                    . c c d d b b b d c c . . . . . 
+                    . . c c c c c c c c c c c . . . 
+                    . . . c d d d d d d b d d c . . 
+                    . . . c d d d d b d c c d c . . 
+                    . . . c d c c d c c d d b c . . 
+                    . . . c c . c c . c c c c . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                200,
+                false
+                )
+            })
+        }
+    }
+}
 sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemy, function (sprite, otherSprite) {
     playHitSound()
     if (sprites.readDataString(otherSprite, "data_type") == "bat") {
@@ -5105,7 +5265,7 @@ function updateCamera (_camera: Sprite, _player: Sprite) {
         sprites.destroyAllSpritesOfKind(SpriteKind.Enemy)
         sprites.destroyAllSpritesOfKind(SpriteKind.EnemyHurt)
         sprites.destroyAllSpritesOfKind(SpriteKind.BatSleeping)
-        sprites.destroyAllSpritesOfKind(SpriteKind.NPC2)
+        sprites.destroyAllSpritesOfKind(SpriteKind.Quest)
         sprites.destroyAllSpritesOfKind(SpriteKind.NPC)
         if (!(isLevelComplete())) {
             createBats()
@@ -5113,6 +5273,7 @@ function updateCamera (_camera: Sprite, _player: Sprite) {
         }
         sprite_cameraFollow.setFlag(SpriteFlag.GhostThroughSprites, false)
         bool_isTransition = true
+        bool_isPlayerFrozen = true
         controller.moveSprite(sprite_player, 0, 0)
         sprite_player.setVelocity(0, 0)
         sprite_player.follow(sprite_cameraControl, 50)
@@ -5145,11 +5306,11 @@ let _array_animSprites: Image[] = []
 let sprite_tree: Sprite = null
 let myMinimap: minimap.Minimap = null
 let sprite_map: Sprite = null
-let _num_dialogLength = 0
 let _num_knockbackZ = 0
 let _num_knockbackY = 0
 let _num_knockbackX = 0
 let text_moneyAdd: TextSprite = null
+let _num_dialogLength = 0
 let sprite_enemyWaker: Sprite = null
 let bool_isDungeon = false
 let _num_bushPitch = 0
@@ -5157,8 +5318,8 @@ let bool_isTransition = false
 let sprite_cameraFollow: Sprite = null
 let bool_isStunned = false
 let num_lastHit = 0
-let sprite_NPC2: Sprite = null
-let sprite_NPC1: Sprite = null
+let sprite_questIcon: Sprite = null
+let sprite_NPC: Sprite = null
 let bool_isNPCTalking = false
 let _sprite_debris: Sprite = null
 let sprite_bat: Sprite = null
@@ -5178,7 +5339,8 @@ let Bool_isAttacking = false
 let sprite_player: Sprite = null
 let num_lastFacing = 0
 let bool_isPlayerFrozen = false
-let _num_winCondition = 0
+let num_winCondition = 0
+let bool_hasQuest = false
 let _bool_isEnemyRoom = false
 let _num_bigMoneyChance = 0
 let _num_sparkleDelay = 0
@@ -5190,6 +5352,8 @@ let num_lastDialogueNPC2 = 0
 let num_lastDialogueNPC1 = 0
 let bool_mapOut = false
 let num_isGameover = 0
+color.setColor(15, color.rgb(92, 64, 108))
+color.setColor(1, color.rgb(240, 216, 207))
 music.setVolume(255)
 tiles.setCurrentTilemap(tilemap`Dungeon`)
 num_isGameover = 0
@@ -5208,7 +5372,8 @@ num_moneyValue3 = 100
 _num_sparkleDelay = 45
 _num_bigMoneyChance = 20
 _bool_isEnemyRoom = true
-_num_winCondition = 0
+bool_hasQuest = true
+num_winCondition = 0
 createLevelCompleteArray()
 game.onUpdate(function () {
     checkEnemyRoomFinished()
