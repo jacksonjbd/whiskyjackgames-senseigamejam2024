@@ -1731,6 +1731,91 @@ function flipSwitch (_switchDown: Image, _blockUp: Image, _blockMid: Image, _blo
         })
     })
 }
+function cat3Dialog (_cat3: Sprite) {
+    if (!(bool_isNPCTalking)) {
+        bool_isNPCTalking = true
+        animation.runImageAnimation(
+        _cat3,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . c c c . . . . c c c . . . . . 
+            . c d d c . . c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d c c d d d c c c . . . . . 
+            . c b d d d b d d b c . . . . . 
+            . c c d d b b b d c c . . . . . 
+            . . c c c c c c c c c c c . . . 
+            . . . c d d d d d d b d d c . . 
+            . . . c d d d d b d c c d c . . 
+            . . . c d c c d c c d d b c . . 
+            . . . c c . c c . c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . c c c . . . . c c c . . . . . 
+            . c d d c . . c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d c c d d d c c c . . . . . 
+            . c b d d d b d d b c . . . . . 
+            . c c d d b b b d c c c c . . . 
+            . . c c c b b b c c b d d c . . 
+            . . . c b c c c b b c c d c . . 
+            . . . c d c c d c c d d b c . . 
+            . . . c c . c c . c c c c . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
+        playCatNoise()
+        if (num_lastDialogNPC4 == 0) {
+            _num_dialogLength = 2500
+            _cat3.sayText("Thank you for saving me!!", _num_dialogLength, true)
+            num_lastDialogNPC4 = 1
+        } else if (num_lastDialogNPC4 == 1) {
+            _num_dialogLength = 2000
+            _cat3.sayText("It was so scary...", _num_dialogLength, true)
+            num_lastDialogNPC4 = 2
+        } else {
+            _num_dialogLength = 3500
+            _cat3.sayText("The humidity in here has been horrible for my fur.", _num_dialogLength, true)
+            num_lastDialogNPC4 = 0
+        }
+        timer.after(_num_dialogLength, function () {
+            bool_isNPCTalking = false
+            animation.runImageAnimation(
+            _cat3,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d c c d d d c c c . . . . . 
+                . c b d d d b d d d c . . . . . 
+                . c c d d b b b d c c . . . . . 
+                . . c c c c c c c c c c c . . . 
+                . . . c d d d d d d b d d c . . 
+                . . . c d d d d b d c c d c . . 
+                . . . c d c c d c c d d b c . . 
+                . . . c c . c c . c c c c . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            200,
+            false
+            )
+        })
+    }
+}
 /**
  * NPC Funcs
  */
@@ -1761,9 +1846,287 @@ function createNPCInView () {
                     . . . . . . c c c c . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Quest)
+                animation.runImageAnimation(
+                sprite_questIcon,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . c c b b c c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b b b b c . . . . . 
+                    . . . . . c c c c c c . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d d d d d d d d c . . . 
+                    . . . c d d d d d d d d c . . . 
+                    . . . c b d d d d d d b c . . . 
+                    . . . c c d d d d d d c c . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c b d d b c c . . . . 
+                    . . . . . c c b b c c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b b b b c . . . . . 
+                    . . . . . c c c c c c . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c c . . . . . 
+                    . . . . . . c d d c c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d d d d d d d d c . . . 
+                    . . . c d d d d d d d d c . . . 
+                    . . . c b d d d d d d b c . . . 
+                    . . . c c d d d d d d c c . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c b b c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `],
+                100,
+                true
+                )
                 sprite_questIcon.z = 101
                 tiles.placeOnTile(sprite_questIcon, value)
-                sprite_questIcon.y += -14
+                sprite_questIcon.y += -16
             }
         }
     }
@@ -1780,7 +2143,24 @@ function createNPCInView () {
     if (num_winCondition == 1) {
         for (let value of tiles.getTilesByType(assets.tile`myTile85`)) {
             if (isInView(value.x, value.y, sprite_cameraControl)) {
-                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprite_NPC = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d c d c d d d c . . . . . 
+                    . c c c d d d c c d c . . . . . 
+                    . c b d d b d d d b c . . . c c 
+                    . c c d b b b d d c c . . c d c 
+                    . . c c c c c c c c c c c c d c 
+                    . . . c d d d d d d b d d d c . 
+                    . . . c d d d d b d d c c c . . 
+                    . . . c d c c d c c d c . . . . 
+                    . . . c c . c c . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.NPC)
                 sprites.setDataString(sprite_NPC, "data_type", "cat2")
                 sprite_NPC.z = 100
                 tiles.placeOnTile(sprite_NPC, value)
@@ -1790,7 +2170,24 @@ function createNPCInView () {
     if (num_winCondition == 2) {
         for (let value of tiles.getTilesByType(assets.tile`myTile86`)) {
             if (isInView(value.x, value.y, sprite_cameraControl)) {
-                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprite_NPC = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d c c d d d c c c . . . . . 
+                    . c b d d d b d d d c . . . . . 
+                    . c c d d b b b d c c . . . . . 
+                    . . c c c c c c c c c c c . . . 
+                    . . . c d d d d d d b d d c . . 
+                    . . . c d d d d b d c c d c . . 
+                    . . . c d c c d c c d d b c . . 
+                    . . . c c . c c . c c c c . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.NPC)
                 sprites.setDataString(sprite_NPC, "data_type", "cat3")
                 sprite_NPC.z = 100
                 tiles.placeOnTile(sprite_NPC, value)
@@ -1811,7 +2208,24 @@ function createNPCInView () {
     if (num_winCondition > 1) {
         for (let value of tiles.getTilesByType(assets.tile`myTile61`)) {
             if (isInView(value.x, value.y, sprite_cameraControl)) {
-                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprite_NPC = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d c d c d d d c . . . . . 
+                    . c c c d d d c c d c . . . . . 
+                    . c b d d b d d d b c . . . c c 
+                    . c c d b b b d d c c . . c d c 
+                    . . c c c c c c c c c c c c d c 
+                    . . . c d d d d d d b d d d c . 
+                    . . . c d d d d b d d c c c . . 
+                    . . . c d c c d c c d c . . . . 
+                    . . . c c . c c . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.NPC)
                 sprites.setDataString(sprite_NPC, "data_type", "cat2")
                 sprite_NPC.z = 100
                 tiles.placeOnTile(sprite_NPC, value)
@@ -1822,7 +2236,24 @@ function createNPCInView () {
     if (num_winCondition > 2) {
         for (let value of tiles.getTilesByType(assets.tile`myTile69`)) {
             if (isInView(value.x, value.y, sprite_cameraControl)) {
-                sprite_NPC = sprites.create(assets.image`CatNpclol`, SpriteKind.NPC)
+                sprite_NPC = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . c c c . . . . c c c . . . . . 
+                    . c d d c . . c d d c . . . . . 
+                    . c b d d c c d d b c . . . . . 
+                    . c b b d d b d b b c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d d d d d d d d c . . . . . 
+                    . c d c c d d d c c c . . . . . 
+                    . c b d d d b d d d c . . . . . 
+                    . c c d d b b b d c c . . . . . 
+                    . . c c c c c c c c c c c . . . 
+                    . . . c d d d d d d b d d c . . 
+                    . . . c d d d d b d c c d c . . 
+                    . . . c d c c d c c d d b c . . 
+                    . . . c c . c c . c c c c . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.NPC)
                 sprites.setDataString(sprite_NPC, "data_type", "cat3")
                 sprite_NPC.z = 100
                 tiles.placeOnTile(sprite_NPC, value)
@@ -2948,10 +3379,12 @@ function destroyTreesOutOfView () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile90`, function (sprite, location) {
     flipSwitch(assets.tile`myTile91`, assets.tile`myTile87`, assets.tile`myTile88`, assets.tile`myTile89`, location.column, location.row)
     timer.after(1650, function () {
+        num_winCondition = 3
+        num_lastDialogNPC1 = 3
+        bool_hasQuest = true
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
-        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
-        num_winCondition = 3
+        playCutsceneSaveNPC(sprite_NPC, -75, 0, 2500, "Follow me!")
     })
 })
 function playWizardNoise () {
@@ -2967,8 +3400,6 @@ function playWizardNoise () {
     ), music.PlaybackMode.UntilDone)
 }
 function wizardDialog (_wizard: Sprite) {
-    bool_hasQuest = false
-    sprites.destroyAllSpritesOfKind(SpriteKind.Quest)
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
         animation.runImageAnimation(
@@ -3011,47 +3442,51 @@ function wizardDialog (_wizard: Sprite) {
         350,
         true
         )
-        if (num_lastDialogueNPC1 == 0) {
+        playWizardNoise()
+        if (num_lastDialogNPC1 == 0) {
+            bool_hasQuest = false
+            sprites.destroyAllSpritesOfKind(SpriteKind.Quest)
             _num_dialogLength = 3000
-            _wizard.sayText("Please save my friends from this factory!", _num_dialogLength, true)
-            playWizardNoise()
-            num_lastDialogueNPC1 = 1
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                _wizard,
-                [img`
-                    . . . . . . . . c c c c . . . . 
-                    . . . . . . c c b b b b c . . . 
-                    . . . . . c b b b b c c b c . . 
-                    . . . . c b b b b b b c c . . . 
-                    . c c c d b b b b b b d c c c . 
-                    c b b b b d d d d d d b b b b c 
-                    c c c b b b b b b b b b b c c c 
-                    . . c c c c c c c c c c c c . . 
-                    . . . c b b b b b b b b c . . . 
-                    . . . c b c c b b c c b c . . . 
-                    . . . . c b d d d d b c . . . . 
-                    . . . c c c c c c c c c c . . . 
-                    . . . c d c b b b b c d c . . . 
-                    . . . c c c b b b b c c c . . . 
-                    . . . . . c c c c c c . . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
-        } else if (num_lastDialogueNPC1 == 1) {
+            _wizard.sayText("Please save my cats from this factory!", _num_dialogLength, true)
+            num_lastDialogNPC1 = 1
+        } else if (num_lastDialogNPC1 == 1) {
             _num_dialogLength = 2500
             _wizard.sayText("There's evil robots inside!", _num_dialogLength, true)
-            playWizardNoise()
-            num_lastDialogueNPC1 = 2
+            num_lastDialogNPC1 = 2
+        } else if (num_lastDialogNPC1 == 2) {
+            _num_dialogLength = 2000
+            _wizard.sayText("Hahaha! I'm old!", _num_dialogLength, true)
+            num_lastDialogNPC1 = 0
+        } else if (num_lastDialogNPC1 == 3) {
+            bool_hasQuest = false
+            sprites.destroyAllSpritesOfKind(SpriteKind.Quest)
+            num_lastDialogNPC1 = 4
+            bool_isPlayerFrozen = true
+            controller.moveSprite(sprite_player, 0, 0)
+            sprite_player.setVelocity(0, 0)
+            _num_dialogLength = 2000
+            _wizard.sayText("Thank you for saving them!!", _num_dialogLength, true)
             timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
                 animation.runImageAnimation(
                 _wizard,
                 [img`
+                    . . . . . . . . c c c c c . . . 
+                    . . . . . . c c b b b b b c . . 
+                    . . . . c c b b b b b c b c . . 
+                    . . c c d d d d d d d d c c . . 
+                    . c c b b b b b b b b b b c c . 
+                    c b b b b b b b b b b b b b b c 
+                    c c c c c c c c c c c c c c c c 
+                    . . . c b b b b b b b b c . . . 
+                    . . . c b c c b b c c b c . . . 
+                    . . . c b d d d d d d b c . . . 
+                    . . . . c b d b b d b c . . . . 
+                    . . . c c c c c c c c c c . . . 
+                    . . . c d c b b b b c d c . . . 
+                    . . . c c c b b b b c c c . . . 
+                    . . . . . c c c c c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
                     . . . . . . . . c c c c . . . . 
                     . . . . . . c c b b b b c . . . 
                     . . . . . c b b b b c c b c . . 
@@ -3069,42 +3504,246 @@ function wizardDialog (_wizard: Sprite) {
                     . . . . . c c c c c c . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                200,
-                false
+                350,
+                true
                 )
+                _num_dialogLength = 2500
+                playWizardNoise()
+                _wizard.sayText("It's safe to shut down the factory now!", _num_dialogLength, true)
+                timer.after(_num_dialogLength, function () {
+                    animation.runImageAnimation(
+                    _wizard,
+                    [img`
+                        . . . . . . . . c c c c c . . . 
+                        . . . . . . c c b b b b b c . . 
+                        . . . . c c b b b b b c b c . . 
+                        . . c c d d d d d d d d c c . . 
+                        . c c b b b b b b b b b b c c . 
+                        c b b b b b b b b b b b b b b c 
+                        c c c c c c c c c c c c c c c c 
+                        . . . c b b b b b b b b c . . . 
+                        . . . c b c c b b c c b c . . . 
+                        . . . c b d d d d d d b c . . . 
+                        . . . . c b d b b d b c . . . . 
+                        . . . c c c c c c c c c c . . . 
+                        . . . c d c b b b b c d c . . . 
+                        . . . c c c b b b b c c c . . . 
+                        . . . . . c c c c c c . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        `,img`
+                        . . . . . . . . c c c c . . . . 
+                        . . . . . . c c b b b b c . . . 
+                        . . . . . c b b b b c c b c . . 
+                        . . . . c b b b b b b c c . . . 
+                        . c c c d b b b b b b d c c c . 
+                        c b b b b d d d d d d b b b b c 
+                        c c c b b b b b b b b b b c c c 
+                        . . c c c c c c c c c c c c . . 
+                        . . . c b b b b b b b b c . . . 
+                        . . . c b c c b b c c b c . . . 
+                        . . . . c b d d d d b c . . . . 
+                        . . . c c c c c c c c c c . . . 
+                        . . . c d c b b b b c d c . . . 
+                        . . . c c c b b b b c c c . . . 
+                        . . . . . c c c c c c . . . . . 
+                        . . . . . . . . . . . . . . . . 
+                        `],
+                    350,
+                    true
+                    )
+                    _num_dialogLength = 1000
+                    playWizardNoise()
+                    _wizard.sayText("In here!!", _num_dialogLength, true)
+                    tiles.setTileAt(tiles.getTileLocation(29, 52), assets.tile`myTile77`)
+                    tiles.setWallAt(tiles.getTileLocation(29, 52), false)
+                    createSmokePosition(472, 840)
+                    timer.after(_num_dialogLength, function () {
+                        sprite_questIcon = sprites.create(img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . c d c . . . . . . 
+                            . . . c c c c c d d c . . . . . 
+                            . . . c d d d d d d d c . . . . 
+                            . . . c b b b b d d b c . . . . 
+                            . . . c c c c c d b c . . . . . 
+                            . . . . . . . c b c . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `, SpriteKind.Player)
+                        animation.runImageAnimation(
+                        sprite_questIcon,
+                        [img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . c c . . . . . . . . . 
+                            . . . . . c d c . . . . . . . . 
+                            . c c c c c d d c . . . . . . . 
+                            . c d d d d d d d c . . . . . . 
+                            . c b b b b d d b c . . . . . . 
+                            . c c c c c d b c . . . . . . . 
+                            . . . . . c b c . . . . . . . . 
+                            . . . . . c c . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `,img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . c c . . . . . . . . . . 
+                            . . . . c d c . . . . . . . . . 
+                            c c c c c d d c . . . . . . . . 
+                            c d d d d d d d c . . . . . . . 
+                            c b b b b d d b c . . . . . . . 
+                            c c c c c d b c . . . . . . . . 
+                            . . . . c b c . . . . . . . . . 
+                            . . . . c c . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `,img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . c c . . . . . . . . . 
+                            . . . . . c d c . . . . . . . . 
+                            . c c c c c d d c . . . . . . . 
+                            . c d d d d d d d c . . . . . . 
+                            . c b b b b d d b c . . . . . . 
+                            . c c c c c d b c . . . . . . . 
+                            . . . . . c b c . . . . . . . . 
+                            . . . . . c c . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `,img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . c d c . . . . . . 
+                            . . . c c c c c d d c . . . . . 
+                            . . . c d d d d d d d c . . . . 
+                            . . . c b b b b d d b c . . . . 
+                            . . . c c c c c d b c . . . . . 
+                            . . . . . . . c b c . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `,img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . c c . . . . . . 
+                            . . . . . . . . c d c . . . . . 
+                            . . . . c c c c c d d c . . . . 
+                            . . . . c d d d d d d d c . . . 
+                            . . . . c b b b b d d b c . . . 
+                            . . . . c c c c c d b c . . . . 
+                            . . . . . . . . c b c . . . . . 
+                            . . . . . . . . c c . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `,img`
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . c d c . . . . . . 
+                            . . . c c c c c d d c . . . . . 
+                            . . . c d d d d d d d c . . . . 
+                            . . . c b b b b d d b c . . . . 
+                            . . . c c c c c d b c . . . . . 
+                            . . . . . . . c b c . . . . . . 
+                            . . . . . . . c c . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `],
+                        100,
+                        true
+                        )
+                        tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(29, 52))
+                        bool_isPlayerFrozen = false
+                        controller.moveSprite(sprite_player, 75, 75)
+                        bool_isNPCTalking = false
+                        animation.runImageAnimation(
+                        _wizard,
+                        [img`
+                            . . . . . . . . c c c c . . . . 
+                            . . . . . . c c b b b b c . . . 
+                            . . . . . c b b b b c c b c . . 
+                            . . . . c b b b b b b c c . . . 
+                            . c c c d b b b b b b d c c c . 
+                            c b b b b d d d d d d b b b b c 
+                            c c c b b b b b b b b b b c c c 
+                            . . c c c c c c c c c c c c . . 
+                            . . . c b b b b b b b b c . . . 
+                            . . . c b c c b b c c b c . . . 
+                            . . . . c b d d d d b c . . . . 
+                            . . . c c c c c c c c c c . . . 
+                            . . . c d c b b b b c d c . . . 
+                            . . . c c c b b b b c c c . . . 
+                            . . . . . c c c c c c . . . . . 
+                            . . . . . . . . . . . . . . . . 
+                            `],
+                        200,
+                        false
+                        )
+                    })
+                })
             })
         } else {
             _num_dialogLength = 2000
-            _wizard.sayText("Hahaha! I'm old!", _num_dialogLength, true)
-            playWizardNoise()
-            num_lastDialogueNPC1 = 0
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                _wizard,
-                [img`
-                    . . . . . . . . c c c c . . . . 
-                    . . . . . . c c b b b b c . . . 
-                    . . . . . c b b b b c c b c . . 
-                    . . . . c b b b b b b c c . . . 
-                    . c c c d b b b b b b d c c c . 
-                    c b b b b d d d d d d b b b b c 
-                    c c c b b b b b b b b b b c c c 
-                    . . c c c c c c c c c c c c . . 
-                    . . . c b b b b b b b b c . . . 
-                    . . . c b c c b b c c b c . . . 
-                    . . . . c b d d d d b c . . . . 
-                    . . . c c c c c c c c c c . . . 
-                    . . . c d c b b b b c d c . . . 
-                    . . . c c c b b b b c c c . . . 
-                    . . . . . c c c c c c . . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
+            _wizard.sayText("Shut down the factory!", _num_dialogLength, true)
         }
+        timer.after(_num_dialogLength, function () {
+            bool_isNPCTalking = false
+            animation.runImageAnimation(
+            _wizard,
+            [img`
+                . . . . . . . . c c c c . . . . 
+                . . . . . . c c b b b b c . . . 
+                . . . . . c b b b b c c b c . . 
+                . . . . c b b b b b b c c . . . 
+                . c c c d b b b b b b d c c c . 
+                c b b b b d d d d d d b b b b c 
+                c c c b b b b b b b b b b c c c 
+                . . c c c c c c c c c c c c . . 
+                . . . c b b b b b b b b c . . . 
+                . . . c b c c b b c c b c . . . 
+                . . . . c b d d d d b c . . . . 
+                . . . c c c c c c c c c c . . . 
+                . . . c d c b b b b c d c . . . 
+                . . . c c c b b b b c c c . . . 
+                . . . . . c c c c c c . . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            200,
+            false
+            )
+        })
     }
 }
 function pickupMoney (_pickup: Sprite, _player: Sprite) {
@@ -3776,12 +4415,13 @@ function createHUD () {
     sprite_hudHealth.z = 500
     sprite_hudHealth.setPosition(24, 8)
 }
-function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: number, _dialog: string, _type: number) {
+function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: number, _dialog: string) {
     controller.moveSprite(sprite_player, 0, 0)
     bool_isPlayerFrozen = true
     sprite_player.setVelocity(0, 0)
     _npc.sayText(_dialog, 550, true)
-    if (_type == 2) {
+    playCatNoise()
+    if (sprites.readDataString(_npc, "data_type") == "cat1") {
         animation.runImageAnimation(
         _npc,
         [img`
@@ -3805,13 +4445,60 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
         350,
         true
         )
-        playCatNoise()
-    } else {
-    	
+    } else if (sprites.readDataString(_npc, "data_type") == "cat2") {
+        animation.runImageAnimation(
+        _npc,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . c c c c . . c c c c . . . . . 
+            . c d d c c c c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d c d d d c d d c . . . . . 
+            . c c d c d c d c d c . c c c . 
+            . c d d d b d d d d c . c d c . 
+            . c c d b b b d d c c . c d c . 
+            . . c c c c c c c c c c c d c . 
+            . . c c d d c d d d b b d b c . 
+            . . c d b c d b d d d c c c c . 
+            . . c c c c c c b c d c . . . . 
+            . . . . . . . c c c c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
+    } else if (sprites.readDataString(_npc, "data_type") == "cat3") {
+        animation.runImageAnimation(
+        _npc,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . c c c c . . c c c c . . . . . 
+            . c d d c c c c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . . . . . 
+            . c d c d d d c d d c . . . . . 
+            . c c d c d c d c d c . c c c . 
+            . c d d d b d d d d c . c d c . 
+            . c c d b b b d d c c . c d c . 
+            . . c c c c c c c c c c c d c . 
+            . . c c d d c d d d b b d b c . 
+            . . c d b c d b d d d c c c c . 
+            . . c c c c c c b c d c . . . . 
+            . . . . . . . c c c c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
     }
     timer.after(500, function () {
         music.play(music.createSoundEffect(WaveShape.Triangle, 1, 1588, 17, 0, 100, SoundExpressionEffect.Vibrato, InterpolationCurve.Curve), music.PlaybackMode.UntilDone)
-        if (_type == 2) {
+        createSmokePosition(_npc.x, _npc.y)
+        _npc.sayText(_dialog)
+        if (sprites.readDataString(_npc, "data_type") == "cat1") {
             animation.runImageAnimation(
             _npc,
             [img`
@@ -3886,10 +4573,156 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
             100,
             true
             )
-            createSmokePosition(_npc.x, _npc.y)
-            _npc.sayText(_dialog)
-        } else {
-        	
+        } else if (sprites.readDataString(_npc, "data_type") == "cat2") {
+            animation.runImageAnimation(
+            _npc,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . . 
+                c b b d b d d b b c . . . . . c 
+                c d d d d d d d d c . . . . c d 
+                c d c d d d c d d c . . . . c d 
+                c c d c d c d c d c . . . c d c 
+                c d d d b d d d d c c c c c d c 
+                c c d b b b d d c c b d d b c c 
+                c c c c c c c c c b d d d d c c 
+                c d c . c d c c c c c c c d c c 
+                c c c . c c c . . . . . c c d c 
+                . . . . . . . . . . . . . c c c 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . c 
+                c b b d b d d b b c . . . . c d 
+                c d d d d d d d d c . . . c d c 
+                c d c d d d c d d c . . . c d c 
+                c c d c d c d c d c c c c c d c 
+                c d d d b d d d d c b d d b c c 
+                c c d b b b d d c c b d d d c . 
+                c c c c c c c c c c c c d c c . 
+                c c b c c c b c c c c d c c . . 
+                c d c c c d c c . . c c c . . . 
+                c c c . c c c . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . c 
+                c b b d b d d b b c . . . . c d 
+                c d d d d d d d d c . . . . c d 
+                c d c d d d c d d c . . . c d c 
+                c c d c d c d c d c c c c d c . 
+                c d d d b d d d d c b d b c . . 
+                c c d b b b d d c c b d d c . . 
+                . c c c c c c c c c c c d c . . 
+                . . . c d c c c d c c d c c . . 
+                . . . c c c . c c c c c c . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . . 
+                c b b d b d d b b c . . . . . . 
+                c d d d d d d d d c . . . . . c 
+                c d c d d d c d d c . . . . c d 
+                c c d c d c d c d c . . . . c d 
+                c d d d b d d d d c . . . c d c 
+                c c d b b b d d c c c c c c d c 
+                c c c c c c c c c b d d d b c . 
+                c d c . c d c c c b d d d d c . 
+                c c c . c c c . c c c c c d c c 
+                . . . . . . . . . . . . c c d c 
+                . . . . . . . . . . . . . c c c 
+                `],
+            100,
+            true
+            )
+        } else if (sprites.readDataString(_npc, "data_type") == "cat3") {
+            animation.runImageAnimation(
+            _npc,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . . 
+                c b b d b d d b b c . . . . . c 
+                c d d d d d d d d c . . . . c d 
+                c d c d d d c d d c . . . . c d 
+                c c d c d c d c d c . . . c d c 
+                c d d d b d d d d c c c c c d c 
+                c c d b b b d d c c d d d d c c 
+                c c c c c c c c c d d d d d c c 
+                c d c . c d c c c c c c c d c c 
+                c c c . c c c . . . . . c c d c 
+                . . . . . . . . . . . . . c c c 
+                . . . . . . . . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . c 
+                c b b d b d d b b c . . . . c d 
+                c d d d d d d d d c . . . c d c 
+                c d c d d d c d d c . . . c d c 
+                c c d c d c d c d c c c c c d c 
+                c d d d b d d d d c d d d d c c 
+                c c d b b b d d c c d d d d c . 
+                c c c c c c c c c c c c d c c . 
+                c c d c c c d c c c c d c c . . 
+                c d c c c d c c . . c c c . . . 
+                c c c . c c c . . . . . . . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . c 
+                c b b d b d d b b c . . . . c d 
+                c d d d d d d d d c . . . . c d 
+                c d c d d d c d d c . . . c d c 
+                c c d c d c d c d c c c c d c . 
+                c d d d b d d d d c d d d c . . 
+                c c d b b b d d c c d d d c . . 
+                . c c c c c c c c c c c d c . . 
+                . . . c d c c c d c c d c c . . 
+                . . . c c c . c c c c c c . . . 
+                `,img`
+                . . . . . . . . . . . . . . . . 
+                . . . . . . . . . . . . . . . . 
+                c c c . . . . c c c . . . . . . 
+                c d d c . . c d d c . . . . . . 
+                c b d d c c d d b c . . . . . . 
+                c b b d b d d b b c . . . . . . 
+                c d d d d d d d d c . . . . . c 
+                c d c d d d c d d c . . . . c d 
+                c c d c d c d c d c . . . . c d 
+                c d d d b d d d d c . . . c d c 
+                c c d b b b d d c c c c c c d c 
+                c c c c c c c c c d d d d d c . 
+                c d c . c d c c c c d d d d c . 
+                c c c . c c c . . c c c c d c c 
+                . . . . . . . . . . . . c c d c 
+                . . . . . . . . . . . . . c c c 
+                `],
+            100,
+            true
+            )
         }
         _npc.setVelocity(_vx, _vy)
         timer.after(_length, function () {
@@ -3897,6 +4730,516 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
             openDoorsInView()
             controller.moveSprite(sprite_player, 75, 75)
             bool_isPlayerFrozen = false
+            if (num_winCondition >= 3) {
+                sprite_questIcon = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Player)
+                animation.runImageAnimation(
+                sprite_questIcon,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . c d c . . . . . 
+                    . . . . . . . c d d c c c c c . 
+                    . . . . . . c d d d d d d d c . 
+                    . . . . . . c b d d b b b b c . 
+                    . . . . . . . c b d c c c c c . 
+                    . . . . . . . . c b c . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . c c . . . . 
+                    . . . . . . . . . c d c . . . . 
+                    . . . . . . . . c d d c c c c c 
+                    . . . . . . . c d d d d d d d c 
+                    . . . . . . . c b d d b b b b c 
+                    . . . . . . . . c b d c c c c c 
+                    . . . . . . . . . c b c . . . . 
+                    . . . . . . . . . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . c d c . . . . . 
+                    . . . . . . . c d d c c c c c . 
+                    . . . . . . c d d d d d d d c . 
+                    . . . . . . c b d d b b b b c . 
+                    . . . . . . . c b d c c c c c . 
+                    . . . . . . . . c b c . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c . . . . . . . . 
+                    . . . . . c d c . . . . . . . . 
+                    . . . . c d d c c c c c . . . . 
+                    . . . c d d d d d d d c . . . . 
+                    . . . c b d d b b b b c . . . . 
+                    . . . . c b d c c c c c . . . . 
+                    . . . . . c b c . . . . . . . . 
+                    . . . . . . c c . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                100,
+                true
+                )
+                tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(42, 36))
+                sprite_questIcon = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Player)
+                animation.runImageAnimation(
+                sprite_questIcon,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . c d c . . . . . 
+                    . . . . . . . c d d c c c c c . 
+                    . . . . . . c d d d d d d d c . 
+                    . . . . . . c b d d b b b b c . 
+                    . . . . . . . c b d c c c c c . 
+                    . . . . . . . . c b c . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . c c . . . . 
+                    . . . . . . . . . c d c . . . . 
+                    . . . . . . . . c d d c c c c c 
+                    . . . . . . . c d d d d d d d c 
+                    . . . . . . . c b d d b b b b c 
+                    . . . . . . . . c b d c c c c c 
+                    . . . . . . . . . c b c . . . . 
+                    . . . . . . . . . . c c . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . c d c . . . . . 
+                    . . . . . . . c d d c c c c c . 
+                    . . . . . . c d d d d d d d c . 
+                    . . . . . . c b d d b b b b c . 
+                    . . . . . . . c b d c c c c c . 
+                    . . . . . . . . c b c . . . . . 
+                    . . . . . . . . . c c . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c . . . . . . . . 
+                    . . . . . c d c . . . . . . . . 
+                    . . . . c d d c c c c c . . . . 
+                    . . . c d d d d d d d c . . . . 
+                    . . . c b d d b b b b c . . . . 
+                    . . . . c b d c c c c c . . . . 
+                    . . . . . c b c . . . . . . . . 
+                    . . . . . . c c . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                100,
+                true
+                )
+                tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(32, 36))
+                sprite_questIcon = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Player)
+                animation.runImageAnimation(
+                sprite_questIcon,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                100,
+                true
+                )
+                tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(25, 38))
+                sprite_questIcon = sprites.create(img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . c d c . . . . . . . 
+                    . . . . . c d d c c c c c . . . 
+                    . . . . c d d d d d d d c . . . 
+                    . . . . c b d d b b b b c . . . 
+                    . . . . . c b d c c c c c . . . 
+                    . . . . . . c b c . . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `, SpriteKind.Player)
+                animation.runImageAnimation(
+                sprite_questIcon,
+                [img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `,img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . c c c d d c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . . c c . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    . . . . . . . . . . . . . . . . 
+                    `],
+                100,
+                true
+                )
+                tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(25, 46))
+            }
         })
     })
 }
@@ -3912,13 +5255,98 @@ function playBatDie () {
     InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
+function cat2Dialog (_cat2: Sprite) {
+    if (!(bool_isNPCTalking)) {
+        bool_isNPCTalking = true
+        animation.runImageAnimation(
+        _cat2,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . c c c c . . c c c c . . . . . 
+            . c d d c c c c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . c c . . 
+            . c d d c d c d d d c c d c . . 
+            . c c c d d d c c d c c d c . . 
+            . c b d d b d d b d c c d c . . 
+            . c c d b b b d b c c c d c . . 
+            . . c c c c c c c c b d c . . . 
+            . . . c b c d d b d d c . . . . 
+            . . . c b c c c c c d c . . . . 
+            . . . c c c . . . c c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . c c c c . . c c c c . . . . . 
+            . c d d c c c c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d d d d d d d c . c c . . 
+            . c d d d c d c d d c c d c . . 
+            . c d c c d d d c c c c d c . . 
+            . c d b d d b d d b c c d c . . 
+            . c c b d b b b d c c c d c . . 
+            . . c c c b b b c c b d c . . . 
+            . . c d d c c c b d d c . . . . 
+            . . c c c c c b c c d c . . . . 
+            . . . . . . c c c . c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
+        playCatNoise()
+        if (num_lastDialogNPC3 == 0) {
+            _num_dialogLength = 2500
+            _cat2.sayText("Thank you for saving me!!", _num_dialogLength, true)
+            num_lastDialogNPC3 = 1
+        } else if (num_lastDialogNPC3 == 1) {
+            _num_dialogLength = 2000
+            _cat2.sayText("It was so scary...", _num_dialogLength, true)
+            num_lastDialogNPC3 = 2
+        } else {
+            _num_dialogLength = 3500
+            _cat2.sayText("The humidity in here has been horrible for my fur.", _num_dialogLength, true)
+            num_lastDialogNPC3 = 0
+        }
+        timer.after(_num_dialogLength, function () {
+            bool_isNPCTalking = false
+            animation.runImageAnimation(
+            _cat2,
+            [img`
+                . . . . . . . . . . . . . . . . 
+                . c c c . . . . c c c . . . . . 
+                . c d d c . . c d d c . . . . . 
+                . c b d d c c d d b c . . . . . 
+                . c b b d d b d b b c . . . . . 
+                . c d d d d d d d d c . . . . . 
+                . c d d c d c d d d c . . . . . 
+                . c c c d d d c c d c . . . . . 
+                . c b d d b d d d b c . . . c c 
+                . c c d b b b d d c c . . c d c 
+                . . c c c c c c c c c c c c d c 
+                . . . c d d d d d d b d d d c . 
+                . . . c d d d d b d d c c c . . 
+                . . . c d c c d c c d c . . . . 
+                . . . c c . c c . . c c . . . . 
+                . . . . . . . . . . . . . . . . 
+                `],
+            200,
+            false
+            )
+        })
+    }
+}
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile57`, function (sprite, location) {
     flipSwitch(assets.tile`myTile58`, assets.tile`myTile56`, assets.tile`myTile67`, assets.tile`myTile59`, location.column, location.row)
     timer.after(1650, function () {
+        num_winCondition = 1
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
-        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
-        num_winCondition = 1
+        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "Yippee!!")
     })
 })
 function knockback (_sprite: Sprite, _origin: Sprite, _speed: number, _time: number) {
@@ -3982,8 +5410,8 @@ function wakeUpBat (_bat: Sprite) {
         . c c . . . . . . . . . . c c . 
         . c b c . . c c . c c . c b c . 
         . c b b c c d b c d b c b b c . 
-        . c b b c c d b b d b c b b c . 
-        . c b b c d c b c d b c b b c . 
+        . c b b c c b b b b b c b b c . 
+        . c b b c d d b d d b c b b c . 
         . c b b c d c b c d b c b b c . 
         . c b b c b b b b b b c b b c . 
         . c c b c b d c d b b c b c c . 
@@ -4426,10 +5854,10 @@ function openDoorsInView () {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, location) {
     flipSwitch(assets.tile`myTile63`, assets.tile`myTile64`, assets.tile`myTile65`, assets.tile`myTile66`, location.column, location.row)
     timer.after(1650, function () {
+        num_winCondition = 2
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
-        playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "yippee!", 2)
-        num_winCondition = 2
+        playCutsceneSaveNPC(sprite_NPC, -75, 0, 2500, "Yahoo!!")
     })
 })
 function createLevelCompleteArray () {
@@ -4878,149 +6306,62 @@ function setPlayerAnimations (_type: number, _delay: number) {
 function cat1Dialog (_cat1: Sprite) {
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
-        if (num_lastDialogueNPC2 == 0) {
-            animation.runImageAnimation(
-            _cat1,
-            [img`
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d c d d d c d d c . . . . . 
-                . c c d c d c d c d c . . . . . 
-                . c d d d b d d d d c . . . c c 
-                . c d d b b b d d d c . . c d c 
-                . c c d d d d d d c c . c d c . 
-                . . c c c c c c c c c c c d c . 
-                . . . c d d c d d d b d d c . . 
-                . . . c d c d b d d d c c . . . 
-                . . . c d c c c c c d c . . . . 
-                . . . c c . . . . . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d c d d d c d c . . . . . 
-                . c d c d c d c d c c . . . . . 
-                . c d d d d b d d d c . . . c c 
-                . c d d d b b b d d c . . c d c 
-                . c c d d b b b d c c . c d c . 
-                . . c c c c c c c c c c c d c . 
-                . . . c d d d d d d b d d c . . 
-                . . c d b d d d b d d c c . . . 
-                . . c c c c c d c c d c . . . . 
-                . . . . . . c c . . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `],
-            350,
-            true
-            )
+        animation.runImageAnimation(
+        _cat1,
+        [img`
+            . . . . . . . . . . . . . . . . 
+            . c c c . . . . c c c . . . . . 
+            . c d d c . . c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d c d d d c d d c . . . . . 
+            . c c d c d c d c d c . . . . . 
+            . c d d d b d d d d c . . . c c 
+            . c d d b b b d d d c . . c d c 
+            . c c d d d d d d c c . c d c . 
+            . . c c c c c c c c c c c d c . 
+            . . . c d d c d d d b d d c . . 
+            . . . c d c d b d d d c c . . . 
+            . . . c d c c c c c d c . . . . 
+            . . . c c . . . . . c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `,img`
+            . . . . . . . . . . . . . . . . 
+            . c c c . . . . c c c . . . . . 
+            . c d d c . . c d d c . . . . . 
+            . c b d d c c d d b c . . . . . 
+            . c b b d d b d b b c . . . . . 
+            . c d d c d d d c d c . . . . . 
+            . c d c d c d c d c c . . . . . 
+            . c d d d d b d d d c . . . c c 
+            . c d d d b b b d d c . . c d c 
+            . c c d d b b b d c c . c d c . 
+            . . c c c c c c c c c c c d c . 
+            . . . c d d d d d d b d d c . . 
+            . . c d b d d d b d d c c . . . 
+            . . c c c c c d c c d c . . . . 
+            . . . . . . c c . . c c . . . . 
+            . . . . . . . . . . . . . . . . 
+            `],
+        350,
+        true
+        )
+        playCatNoise()
+        if (num_lastDialogNPC2 == 0) {
             _num_dialogLength = 2500
             _cat1.sayText("Thank you for saving me!!", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 1
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                _cat1,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d c d d d c d d c . . . . . 
-                    . c c d c d c d c d c c c . . . 
-                    . c d d d b d d d d c c d c . . 
-                    . c c d b b b d d c c . c d c . 
-                    . . c c c c c c c c c c c d c . 
-                    . . . c d d d d d d b d d c . . 
-                    . . . c d d d d b d d c c . . . 
-                    . . . c d c c d c c d c . . . . 
-                    . . . c c . c c . . c c . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                true
-                )
-            })
-        } else if (num_lastDialogueNPC2 == 1) {
-            animation.runImageAnimation(
-            _cat1,
-            [img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c c . . c c c c . . . . . 
-                . c d d c c c c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . c c . . 
-                . c d d c d c d d d c c d c . . 
-                . c c c d d d c c d c c d c . . 
-                . c b d d b d d b d c c d c . . 
-                . c c d b b b d b c c c d c . . 
-                . . c c c c c c c c b d c . . . 
-                . . . c b c d d b d d c . . . . 
-                . . . c b c c c c c d c . . . . 
-                . . . c c c . . . c c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c c . . c c c c . . . . . 
-                . c d d c c c c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . c c . . 
-                . c d d d c d c d d c c d c . . 
-                . c d c c d d d c c c c d c . . 
-                . c d b d d b d d b c c d c . . 
-                . c c b d b b b d c c c d c . . 
-                . . c c c b b b c c b d c . . . 
-                . . c d d c c c b d d c . . . . 
-                . . c c c c c b c c d c . . . . 
-                . . . . . . c c c . c c . . . . 
-                . . . . . . . . . . . . . . . . 
-                `],
-            350,
-            true
-            )
+            num_lastDialogNPC2 = 1
+        } else if (num_lastDialogNPC2 == 1) {
             _num_dialogLength = 2000
             _cat1.sayText("It was so scary...", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 2
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                _cat1,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d d c d c d d d c . . . . . 
-                    . c c c d d d c c d c . . . . . 
-                    . c b d d b d d d b c . . . c c 
-                    . c c d b b b d d c c . . c d c 
-                    . . c c c c c c c c c c c c d c 
-                    . . . c d d d d d d b d d d c . 
-                    . . . c d d d d b d d c c c . . 
-                    . . . c d c c d c c d c . . . . 
-                    . . . c c . c c . . c c . . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
+            num_lastDialogNPC2 = 2
         } else {
+            _num_dialogLength = 3500
+            _cat1.sayText("The humidity has been horrible for my fur.", _num_dialogLength, true)
+            num_lastDialogNPC2 = 0
+        }
+        timer.after(_num_dialogLength, function () {
+            bool_isNPCTalking = false
             animation.runImageAnimation(
             _cat1,
             [img`
@@ -5030,68 +6371,21 @@ function cat1Dialog (_cat1: Sprite) {
                 . c b d d c c d d b c . . . . . 
                 . c b b d d b d b b c . . . . . 
                 . c d d d d d d d d c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d c c d d d c c c . . . . . 
-                . c b d d d b d d b c . . . . . 
-                . c c d d b b b d c c . . . . . 
-                . . c c c c c c c c c c c . . . 
+                . c d c d d d c d d c . . . . . 
+                . c c d c d c d c d c c c . . . 
+                . c d d d b d d d d c c d c . . 
+                . c c d b b b d d c c . c d c . 
+                . . c c c c c c c c c c c d c . 
                 . . . c d d d d d d b d d c . . 
-                . . . c d d d d b d c c d c . . 
-                . . . c d c c d c c d d b c . . 
-                . . . c c . c c . c c c c . . . 
-                . . . . . . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . . . . . . 
-                . . . . . . . . . . . . . . . . 
-                . c c c . . . . c c c . . . . . 
-                . c d d c . . c d d c . . . . . 
-                . c b d d c c d d b c . . . . . 
-                . c b b d d b d b b c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d d d d d d d d c . . . . . 
-                . c d c c d d d c c c . . . . . 
-                . c b d d d b d d b c . . . . . 
-                . c c d d b b b d c c c c . . . 
-                . . c c c b b b c c b d d c . . 
-                . . . c b c c c b b c c d c . . 
-                . . . c d c c d c c d d b c . . 
-                . . . c c . c c . c c c c . . . 
+                . . . c d d d d b d d c c . . . 
+                . . . c d c c d c c d c . . . . 
+                . . . c c . c c . . c c . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            350,
-            true
+            200,
+            false
             )
-            _num_dialogLength = 3500
-            _cat1.sayText("The humidity in here has been horrible for my fur.", _num_dialogLength, true)
-            playCatNoise()
-            num_lastDialogueNPC2 = 0
-            timer.after(_num_dialogLength, function () {
-                bool_isNPCTalking = false
-                animation.runImageAnimation(
-                _cat1,
-                [img`
-                    . . . . . . . . . . . . . . . . 
-                    . c c c . . . . c c c . . . . . 
-                    . c d d c . . c d d c . . . . . 
-                    . c b d d c c d d b c . . . . . 
-                    . c b b d d b d b b c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d d d d d d d d c . . . . . 
-                    . c d c c d d d c c c . . . . . 
-                    . c b d d d b d d d c . . . . . 
-                    . c c d d b b b d c c . . . . . 
-                    . . c c c c c c c c c c c . . . 
-                    . . . c d d d d d d b d d c . . 
-                    . . . c d d d d b d c c d c . . 
-                    . . . c d c c d c c d d b c . . 
-                    . . . c c . c c . c c c c . . . 
-                    . . . . . . . . . . . . . . . . 
-                    `],
-                200,
-                false
-                )
-            })
-        }
+        })
     }
 }
 sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemy, function (sprite, otherSprite) {
@@ -5309,8 +6603,8 @@ let sprite_map: Sprite = null
 let _num_knockbackZ = 0
 let _num_knockbackY = 0
 let _num_knockbackX = 0
+let num_lastDialogNPC3 = 0
 let text_moneyAdd: TextSprite = null
-let _num_dialogLength = 0
 let sprite_enemyWaker: Sprite = null
 let bool_isDungeon = false
 let _num_bushPitch = 0
@@ -5320,6 +6614,8 @@ let bool_isStunned = false
 let num_lastHit = 0
 let sprite_questIcon: Sprite = null
 let sprite_NPC: Sprite = null
+let _num_dialogLength = 0
+let num_lastDialogNPC4 = 0
 let bool_isNPCTalking = false
 let _sprite_debris: Sprite = null
 let sprite_bat: Sprite = null
@@ -5348,8 +6644,8 @@ let num_moneyValue3 = 0
 let num_moneyValue2 = 0
 let num_moneyValue1 = 0
 let bool_torchChange = false
-let num_lastDialogueNPC2 = 0
-let num_lastDialogueNPC1 = 0
+let num_lastDialogNPC2 = 0
+let num_lastDialogNPC1 = 0
 let bool_mapOut = false
 let num_isGameover = 0
 color.setColor(15, color.rgb(92, 64, 108))
@@ -5363,8 +6659,8 @@ setPlayerAnimations(2, 100)
 createHUD()
 createCameraController()
 createTreesInView()
-num_lastDialogueNPC1 = 0
-num_lastDialogueNPC2 = 0
+num_lastDialogNPC1 = 0
+num_lastDialogNPC2 = 0
 bool_torchChange = true
 num_moneyValue1 = 5
 num_moneyValue2 = 20
@@ -5374,6 +6670,7 @@ _num_bigMoneyChance = 20
 _bool_isEnemyRoom = true
 bool_hasQuest = true
 num_winCondition = 0
+let num_playerSpeed = 0
 createLevelCompleteArray()
 game.onUpdate(function () {
     checkEnemyRoomFinished()

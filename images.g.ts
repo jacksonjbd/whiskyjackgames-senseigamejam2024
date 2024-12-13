@@ -261,25 +261,6 @@ c c c b b b b b b b b b b c c c
 . . . . . c c c c c c . . . . . 
 . . . . . . . . . . . . . . . . 
 `;
-            case "image1":
-            case "CatNpclol":return img`
-. . . . . . . . . . . . . . . . 
-. c c c . . . . c c c . . . . . 
-. c d d c . . c d d c . . . . . 
-. c b d d c c d d b c . . . . . 
-. c b b d d b d b b c . . . . . 
-. c d d d d d d d d c . . . . . 
-. c d d d d d d d d c . . . . . 
-. c d d c d d d c d c . . c . . 
-. c d d c d b d c d c . c d c . 
-. c c d d b b b d c . . c d c . 
-. . c c c c c c c c c c c d c . 
-. . . c d d d d d d b b d b c . 
-. . . c d d d d b d d c c c . . 
-. . . c d c c d c c d c . . . . 
-. . . c c . c c . . c c . . . . 
-. . . . . . . . . . . . . . . . 
-`;
             case "image10":
             case "BatSleeping":return img`
 . . . . . . . . . . . . . . . . 
@@ -390,6 +371,25 @@ c 6 7 7 7 6 c
 . 2 2 2 2 2 2 2 2 2 2 . 
 . . 2 2 2 2 2 2 2 2 . . 
 . . . . 2 2 2 2 . . . . 
+`;
+            case "image1":
+            case "CatNpclol":return img`
+. . . . . . . . . . . . . . . . 
+. c c c . . . . c c c . . . . . 
+. c d d c . . c d d c . . . . . 
+. c b d d c c d d b c . . . . . 
+. c b b d d b d b b c . . . . . 
+. c d d d d d d d d c . . . . . 
+. c d c d d d c d d c . . . . . 
+. c c d c d c d c d c c c . . . 
+. c d d d b d d d d c c d c . . 
+. c c d b b b d d c c . c d c . 
+. . c c c c c c c c c c c d c . 
+. . . c d d d d d d b d d c . . 
+. . . c d d d d b d d c c . . . 
+. . . c d c c d c c d c . . . . 
+. . . c c . c c . . c c . . . . 
+. . . . . . . . . . . . . . . . 
 `;
         }
         return null;
