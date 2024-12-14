@@ -261,25 +261,6 @@ c c c b b b b b b b b b b c c c
 . . . . . c c c c c c . . . . . 
 . . . . . . . . . . . . . . . . 
 `;
-            case "image10":
-            case "BatSleeping":return img`
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . c c c c c c . . . . . 
-. . . . c c b b c b c c . . . . 
-. . . c b c b b c b c b c . . . 
-. . . c b c b b c b c b c . . . 
-. . . c b c b b c b b b c . . . 
-. . . c b b c c c c c b c . . . 
-. . . c b c b b b b b c c . . . 
-. . . c c b c c b c c b c . . . 
-. . . . c b b b b b b c . . . . 
-. . . . c b d b b d c c . . . . 
-. . . . c b d c b d c . . . . . 
-. . . . c c c . c c c . . . . . 
-. . . . . . . . . . . . . . . . 
-. . . . . . . . . . . . . . . . 
-`;
             case "image6":
             case "Tree2":return img`
 ........................
@@ -390,6 +371,25 @@ c 6 7 7 7 6 c
 . . . c d c c d c c d c . . . . 
 . . . c c . c c . . c c . . . . 
 . . . . . . . . . . . . . . . . 
+`;
+            case "image10":
+            case "BatSleeping":return img`
+. . . . . . . . . . . . . . . . 
+. . . . . . . . . . . . . . . . 
+. . . c c c c c c . . . . . . . 
+. . . c b d d d c . . . . . . . 
+. . . . c b d c . . . . . . . . 
+. . . . . c b c c c c c c c . . 
+. . . . c c c b c b b b b b c . 
+. c c c d d b c c d d d d d c . 
+c d d d d b c b b c c d d c c . 
+. c d d d b c b b b c d c c . . 
+. . c c b c b b b b b c . . . . 
+. . . c c b b b b b b c . . . . 
+. . . c b c c c c c b c . . . . 
+. . . c b b b b b b b c . . . . 
+. . . . c c b b b c c . . . . . 
+. . . . . . c c c . . . . . . . 
 `;
         }
         return null;
