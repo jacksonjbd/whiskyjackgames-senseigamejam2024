@@ -3528,12 +3528,12 @@ function droneAttack (_drone: Sprite) {
 function playBatHurt () {
     music.play(music.createSoundEffect(
     WaveShape.Sawtooth,
-    randint(3000, 3500),
+    randint(4000, 5000),
     2000,
-    80,
+    103,
     0,
     300,
-    SoundExpressionEffect.Vibrato,
+    SoundExpressionEffect.Warble,
     InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
@@ -4276,7 +4276,7 @@ function destroyBush (_column: number, _row: number) {
  */
 function playBatNoise () {
     music.play(music.createSoundEffect(
-    WaveShape.Sawtooth,
+    WaveShape.Triangle,
     randint(2000, 2400),
     4000,
     80,
@@ -4340,37 +4340,37 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
         [img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . d . . . . . d . . . . . 
-            . . . d b d . . . d b d . . . . 
-            . . . d b d . . . d b d . . . . 
-            . . d d b d d d d d b d d . . . 
-            . d b d d b 7 7 7 b d d b d . . 
-            . d b d d 7 7 7 7 7 d d b d . . 
+            . . c c c . . . . . c c c . . . 
+            . . c c d . . . . . d c c . . . 
+            . . c d b d . . . d b d c . . . 
+            c c c d b d c c c d b d c c c . 
+            c c d d b d d d d d b d d c c . 
+            c d b d d b 7 7 7 b d d b d c . 
+            c d b d d 7 7 7 7 7 d d b d c . 
             d d b d b d 7 7 7 d b d b d d . 
             d b b d b d 7 7 7 d b d b b d . 
             d b d d b d b b b d b d d b d . 
             d b d b b d b b b d b b d b d . 
             d c d b d d d d d d d b d c d . 
-            d d d b d . . . . . d b d d d . 
-            . . d c d . . . . . d c d . . . 
+            d d d b d c c c c c d b d d d . 
+            . . d c d c c c c c d c d . . . 
             `,img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . c . . . . . c . . . . . 
-            . . . c b c . . . c b c . . . . 
-            . . . c b c . . . c b c . . . . 
-            . . c c b c c c c c b c c . . . 
-            . c b c c b 7 7 7 b c c b c . . 
-            . c b c c 7 7 7 7 7 c c b c . . 
+            . . c c c . . . . . c c c . . . 
+            . . c c c . . . . . c c c . . . 
+            . . c c b c . . . c b c c . . . 
+            c c c c b c c c c c b c c c c . 
+            c c c c b c c c c c b c c c c . 
+            c c b c c b 7 7 7 b c c b c c . 
+            c c b c c 7 7 7 7 7 c c b c c . 
             c c b c b c 7 7 7 c b c b c c . 
             c b b c b c 7 7 7 c b c b b c . 
             c b c c b c b b b c b c c b c . 
             c b c b b c b b b c b b c b c . 
             c d c b c c c c c c c b c d c . 
-            c c c b c . . . . . c b c c c . 
-            . . c d c . . . . . c d c . . . 
+            c c c b c c c c c c c b c c c . 
+            . . c d c c c c c c c d c . . . 
             `],
         200,
         false
@@ -4387,37 +4387,37 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
         [img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . d . . . . . d . . . . . 
-            . . . d b d . . . d b d . . . . 
-            . . . d b d . . . d b d . . . . 
-            . . d d b d d d d d b d d . . . 
-            . d b d d b 7 6 7 b d d b d . . 
-            . d b d d 7 6 6 6 7 d d b d . . 
-            d d b d b d 7 6 7 d b d b d d . 
+            . . c c c . . . . . c c c . . . 
+            . . c c d . . . . . d c c . . . 
+            . . c d b d . . . d b d c . . . 
+            c c c d b d c c c d b d c c c . 
+            c c d d b d 7 6 7 d b d d c c . 
+            c d b d d 7 6 6 6 7 d d b d c . 
+            c d b d d 7 7 6 7 7 d d b d c . 
+            d d b d b d 7 7 7 d b d b d d . 
             d b b d b d 7 7 7 d b d b b d . 
             d b d d b d b b b d b d d b d . 
             d b d b b d b b b d b b d b d . 
             d c d b d d d d d d d b d c d . 
-            d d d b d . . . . . d b d d d . 
-            . . d c d . . . . . d c d . . . 
+            d d d b d c c c c c d b d d d . 
+            . . d c d c c c c c d c d . . . 
             `,img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
-            . . . . . . . . . . . . . . . . 
-            . . . . c . . . . . c . . . . . 
-            . . . c b c . . . c b c . . . . 
-            . . . c b c . . . c b c . . . . 
-            . . c c b c c c c c b c c . . . 
-            . c b c c b 7 6 7 b c c b c . . 
-            . c b c c 7 6 6 6 7 c c b c . . 
-            c c b c b c 7 6 7 c b c b c c . 
+            . . c c c . . . . . c c c . . . 
+            . . c c c . . . . . c c c . . . 
+            . . c c b c . . . c b c c . . . 
+            c c c c b c c c c c b c c c c . 
+            c c c c b c 7 6 7 c b c c c c . 
+            c c b c c 7 6 6 6 7 c c b c c . 
+            c c b c c 7 7 6 7 7 c c b c c . 
+            c c b c b c 7 7 7 c b c b c c . 
             c b b c b c 7 7 7 c b c b b c . 
             c b c c b c b b b c b c c b c . 
             c b c b b c b b b c b b c b c . 
             c d c b c c c c c c c b c d c . 
-            c c c b c . . . . . c b c c c . 
-            . . c d c . . . . . c d c . . . 
+            c c c b c c c c c c c b c c c . 
+            . . c d c c c c c c c d c . . . 
             `],
         200,
         false
@@ -4433,8 +4433,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c c c . . . . . c b c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c c b c . c c c . c b b c c . 
+                . . c b c c . . . c c b c . . . 
+                c c c b c c c c c c c b b c c . 
                 c b c b c c 7 7 7 c c c b c c . 
                 c b b c b 7 7 6 7 7 b c c b c . 
                 c b c b b 7 7 7 7 7 c b b b c . 
@@ -4450,8 +4450,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c c c . . . . . c c c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c c b c . c c c . c b c c c . 
+                . . c b c c . . . c c b c . . . 
+                c c c b c c c c c c c b c c c . 
                 c c c b c c 7 7 7 c c b c c c . 
                 c b c c b 7 7 6 7 7 b c c b c . 
                 c b b c b 7 7 7 7 7 b c b b c . 
@@ -4467,8 +4467,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c b c . . . . . c c c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c b b c . c c c . c b c c c . 
+                . . c b c c . . . c c b c . . . 
+                c c b b c c c c c c c b c c c . 
                 c c b c c c 7 7 7 c c b c b c . 
                 c b c c b 7 7 6 7 7 b c b b c . 
                 c b b b c 7 7 7 7 7 b b c b c . 
@@ -4484,8 +4484,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c c c . . . . . c c c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c c b c . c c c . c b c c c . 
+                . . c b c c . . . c c b c . . . 
+                c c c b c c c c c c c b c c c . 
                 c c c b c c 7 7 7 c c b c c c . 
                 c b c c b 7 7 6 7 7 b c c b c . 
                 c b b c b 7 7 7 7 7 b c b b c . 
@@ -6606,13 +6606,13 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
 }
 function playBatDie () {
     music.play(music.createSoundEffect(
-    WaveShape.Sawtooth,
+    WaveShape.Square,
     randint(3000, 3500),
     0,
     80,
     0,
     300,
-    SoundExpressionEffect.Vibrato,
+    SoundExpressionEffect.Warble,
     InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
@@ -7454,6 +7454,13 @@ function wakeUpBat (_bat: Sprite) {
         }
     })
 }
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (bool_settingMusic) {
+        bool_settingMusic = false
+    } else {
+        bool_settingMusic = true
+    }
+})
 function createTreesInView () {
     for (let value of tiles.getTilesByType(assets.tile`myTile34`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
@@ -7473,10 +7480,10 @@ function batDashAttack (_bat: Sprite) {
     [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        . . . . . . . . . . . . . . . . 
+        . . c c c . . . . . c c c . . . 
         . . c c c . . . . . c c c . . . 
         . . c b c . c c c . c b c . . . 
-        . . c b c c 7 6 7 c c b c . . . 
+        c c c b c c 7 6 7 c c b c c c . 
         c c c b c 7 6 6 6 7 c b c c c . 
         c b c c b 7 7 6 7 7 b c c b c . 
         c b b c b 7 7 7 7 7 b c b b c . 
@@ -7484,9 +7491,9 @@ function batDashAttack (_bat: Sprite) {
         c b c b b c b b b c b b c b c . 
         c b c b c c b b b c c b c b c . 
         c b c b c c c c c c c b c b c . 
-        c d c b c . . . . . c b c d c . 
-        c c c b c . . . . . c b c c c . 
-        . . c d c . . . . . c d c . . . 
+        c d c b c c c c c c c b c d c . 
+        c c c b c c c c c c c b c c c . 
+        . . c d c c c c c c c d c . . . 
         `],
     100,
     false
@@ -7502,8 +7509,8 @@ function batDashAttack (_bat: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c c c . . . . . c b c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c c b c . c c c . c b b c c . 
+                . . c b c c . . . c c b c . . . 
+                c c c b c c c c c c c b b c c . 
                 c b c b c c 7 7 7 c c c b c c . 
                 c b b c b 7 7 6 7 7 b c c b c . 
                 c b c b b 7 7 7 7 7 c b b b c . 
@@ -7519,8 +7526,8 @@ function batDashAttack (_bat: Sprite) {
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
                 . . c b c . . . . . c c c . . . 
-                . . c b c . . . . . c b c . . . 
-                c c b b c . c c c . c b c c c . 
+                . . c b c c . . . c c b c . . . 
+                c c b b c c c c c c c b c c c . 
                 c c b c c c 7 6 7 c c b c b c . 
                 c b c c b 7 6 6 6 7 b c b b c . 
                 c b b b c 7 7 6 7 7 b b c b c . 
@@ -7544,8 +7551,8 @@ function batDashAttack (_bat: Sprite) {
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
                         . . c c c . . . . . c b c . . . 
-                        . . c b c . . . . . c b c . . . 
-                        c c c b c . c c c . c b b c c . 
+                        . . c b c c . . . c c b c . . . 
+                        c c c b c c c c c c c b b c c . 
                         c b c b c c 7 7 7 c c c b c c . 
                         c b b c b 7 7 6 7 7 b c c b c . 
                         c b c b b 7 7 7 7 7 c b b b c . 
@@ -7561,8 +7568,8 @@ function batDashAttack (_bat: Sprite) {
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
                         . . c c c . . . . . c c c . . . 
-                        . . c b c . . . . . c b c . . . 
-                        c c c b c . c c c . c b c c c . 
+                        . . c b c c . . . c c b c . . . 
+                        c c c b c c c c c c c b c c c . 
                         c c c b c c 7 7 7 c c b c c c . 
                         c b c c b 7 7 6 7 7 b c c b c . 
                         c b b c b 7 7 7 7 7 b c b b c . 
@@ -7578,8 +7585,8 @@ function batDashAttack (_bat: Sprite) {
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
                         . . c b c . . . . . c c c . . . 
-                        . . c b c . . . . . c b c . . . 
-                        c c b b c . c c c . c b c c c . 
+                        . . c b c c . . . c c b c . . . 
+                        c c b b c c c c c c c b c c c . 
                         c c b c c c 7 7 7 c c b c b c . 
                         c b c c b 7 7 6 7 7 b c b b c . 
                         c b b b c 7 7 7 7 7 b b c b c . 
@@ -7595,8 +7602,8 @@ function batDashAttack (_bat: Sprite) {
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
                         . . c c c . . . . . c c c . . . 
-                        . . c b c . . . . . c b c . . . 
-                        c c c b c . c c c . c b c c c . 
+                        . . c b c c . . . c c b c . . . 
+                        c c c b c c c c c c c b c c c . 
                         c c c b c c 7 7 7 c c b c c c . 
                         c b c c b 7 7 6 7 7 b c c b c . 
                         c b b c b 7 7 7 7 7 b c b b c . 
@@ -8807,6 +8814,7 @@ let num_lastFacing = 0
 let sprite_playerInteract: Sprite = null
 let num_playerSpeed = 0
 let num_winCondition = 0
+let bool_settingMusic = false
 let bool_hasQuest = false
 let bool_isMusic = false
 let _bool_isEnemyRoom = false
@@ -8840,6 +8848,7 @@ let PlayerDead = true
 bool_isMusic = true
 bool_hasQuest = true
 let bool_isSettingUp = true
+bool_settingMusic = true
 num_winCondition = 0
 num_playerSpeed = 75
 createLevelCompleteArray()
@@ -8866,26 +8875,28 @@ game.onUpdate(function () {
     sprite_enemyWaker.setPosition(sprite_player.x, sprite_player.y)
 })
 game.onUpdateInterval(2000, function () {
-    if (bool_isMusic) {
-        music.setVolume(10)
-        if (bool_isMusicEnd) {
-            music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c8001e000000010001060800090001061000110001061800190001061c001d000106`), music.PlaybackMode.InBackground)
-        } else {
-            if (bool_isNPCMusic) {
-                music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c80048000000010001080400050001060600070001060800090001060c000d0001061000110001061200130001061400150001081600170001061800190001081a001b0001061e001f000106`), music.PlaybackMode.InBackground)
+    if (bool_settingMusic) {
+        if (bool_isMusic) {
+            music.setVolume(10)
+            if (bool_isMusicEnd) {
+                music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c8001e000000010001060800090001061000110001061800190001061c001d000106`), music.PlaybackMode.InBackground)
             } else {
-                music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c8003400000001000206080600070001060800090002060810001100020608160017000106180019000206081c001d0001081e001f000106`), music.PlaybackMode.InBackground)
-                if (bool_isDungeonMusic && num_winCondition < 3) {
-                    music.setVolume(75)
-                    music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c80024000000010001020400050001021400150001021800190001021a001b0001021c001d000102`), music.PlaybackMode.InBackground)
-                }
-                if (bool_isEnemyMusic) {
-                    music.setVolume(25)
-                    music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c800550000000100040205090b040005000109080009000302050b0c000d0001090e000f000109100011000302050b1200130001091400150001091800190005020508090b1a001b0001081c001d0002080b1e001f0002080b`), music.PlaybackMode.InBackground)
+                if (bool_isNPCMusic) {
+                    music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c80048000000010001080400050001060600070001060800090001060c000d0001061000110001061200130001061400150001081600170001061800190001081a001b0001061e001f000106`), music.PlaybackMode.InBackground)
+                } else {
+                    music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c8003400000001000206080600070001060800090002060810001100020608160017000106180019000206081c001d0001081e001f000106`), music.PlaybackMode.InBackground)
+                    if (bool_isDungeonMusic && num_winCondition < 3) {
+                        music.setVolume(75)
+                        music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c80024000000010001020400050001021400150001021800190001021a001b0001021c001d000102`), music.PlaybackMode.InBackground)
+                    }
+                    if (bool_isEnemyMusic) {
+                        music.setVolume(25)
+                        music.play(music.createSong(hex`0078000408010109010e02026400000403780000040a000301000000640001c80000040100000000640001640000040100000000fa0004af00000401c80000040a00019600000414000501006400140005010000002c0104dc00000401fa0000040a0001c8000004140005d0076400140005d0070000c800029001f40105c201f4010a0005900114001400039001000005c201f4010500058403050032000584030000fa00049001000005c201f4010500058403c80032000584030500640005840300009001049001000005c201f4010500058403c80064000584030500c8000584030000f40105ac0d000404a00f00000a0004ac0d2003010004a00f0000280004ac0d9001010004a00f0000280002d00700040408070f0064000408070000c80003c800c8000e7d00c80019000e64000f0032000e78000000fa00032c01c8000ee100c80019000ec8000f0032000edc000000fa0003f401c8000ea901c80019000e90010f0032000ea4010000fa0001c8000004014b000000c800012c01000401c8000000c8000190010004012c010000c80002c800000404c8000f0064000496000000c80002c2010004045e010f006400042c010000640002c409000404c4096400960004f6090000f40102b80b000404b80b64002c0104f40b0000f401022003000004200300040a000420030000ea01029001000004900100040a000490010000900102d007000410d0076400960010d0070000c800550000000100040205090b040005000109080009000302050b0c000d0001090e000f000109100011000302050b1200130001091400150001091800190005020508090b1a001b0001081c001d0002080b1e001f0002080b`), music.PlaybackMode.InBackground)
+                    }
                 }
             }
+            music.setVolume(255)
         }
-        music.setVolume(255)
     }
 })
 game.onUpdateInterval(5, function () {
