@@ -4171,18 +4171,24 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 251, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
         controller.moveSprite(_player, 0, 0)
         timer.after(300, function () {
+            bool_isPlayerFrozen = true
             controller.moveSprite(_player, 0, 0)
+            bool_isPlayerFrozen = true
             music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 202, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             timer.after(300, function () {
+                bool_isPlayerFrozen = true
                 controller.moveSprite(_player, 0, 0)
                 music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 149, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                 timer.after(300, function () {
+                    bool_isPlayerFrozen = true
                     controller.moveSprite(_player, 0, 0)
                     music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 105, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                     timer.after(300, function () {
+                        bool_isPlayerFrozen = true
                         controller.moveSprite(_player, 0, 0)
                         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 52, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                         timer.after(500, function () {
+                            bool_isPlayerFrozen = true
                             music.setVolume(100)
                             game.setGameOverEffect(false, effects.dissolve)
                             game.gameOver(false)
