@@ -6758,6 +6758,7 @@ function createBullet (_origin: Sprite, _destination: Sprite) {
         `, SpriteKind.Bullet)
     sprite_bullet.setPosition(_origin.x, _origin.y + 2)
     sprite_bullet.lifespan = 2000
+    sprite_bullet.z = 300
     sprite_bullet.setFlag(SpriteFlag.GhostThroughWalls, true)
     moveTo(sprite_bullet, _destination, 75)
 }
@@ -7962,7 +7963,7 @@ function wakeUpDrone (_drone: Sprite) {
     sprites.setDataNumber(_drone, "data_directionAngle", randint(0, 10))
     _drone.setFlag(SpriteFlag.Ghost, false)
     timer.after(500, function () {
-        if (sprites.readDataNumber(_drone, "data_health") == 3) {
+        if (sprites.readDataNumber(_drone, "data_health") == 1) {
             sprites.setDataNumber(_drone, "data_isBusy", 0)
             animation.runImageAnimation(
             _drone,
