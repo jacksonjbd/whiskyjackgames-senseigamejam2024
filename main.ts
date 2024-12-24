@@ -4171,18 +4171,24 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 251, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
         controller.moveSprite(_player, 0, 0)
         timer.after(300, function () {
+            bool_isPlayerFrozen = true
             controller.moveSprite(_player, 0, 0)
+            bool_isPlayerFrozen = true
             music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 202, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
             timer.after(300, function () {
+                bool_isPlayerFrozen = true
                 controller.moveSprite(_player, 0, 0)
                 music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 149, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                 timer.after(300, function () {
+                    bool_isPlayerFrozen = true
                     controller.moveSprite(_player, 0, 0)
                     music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 105, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                     timer.after(300, function () {
+                        bool_isPlayerFrozen = true
                         controller.moveSprite(_player, 0, 0)
                         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 52, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
                         timer.after(500, function () {
+                            bool_isPlayerFrozen = true
                             music.setVolume(100)
                             game.setGameOverEffect(false, effects.dissolve)
                             game.gameOver(false)
@@ -4213,6 +4219,9 @@ function cameraTransitionEnd () {
     sprite_cameraFollow.setPosition(sprite_cameraControl.x, sprite_cameraControl.y)
     sprite_cameraFollow.follow(sprite_cameraControl, 200)
     bool_isTransition = false
+    if (isLevelComplete()) {
+        openDoorsInView()
+    }
     wakeUpRobots()
     destroyTreesOutOfView()
     destroyDungeonMusicOutOfView()
@@ -4710,6 +4719,15 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile90`, function (sprite, 
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
         playCutsceneSaveNPC(sprite_NPC, -75, 0, 2500, "Follow me!")
+        timer.after(100, function () {
+            controller.moveSprite(sprite_player, 0, 0)
+            timer.after(100, function () {
+                controller.moveSprite(sprite_player, 0, 0)
+                timer.after(100, function () {
+                    controller.moveSprite(sprite_player, 0, 0)
+                })
+            })
+        })
     })
 })
 function playWizardNoise () {
@@ -6708,6 +6726,15 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile57`, function (sprite, 
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
         playCutsceneSaveNPC(sprite_NPC, 0, 75, 2500, "Yippee!!")
+        timer.after(100, function () {
+            controller.moveSprite(sprite_player, 0, 0)
+            timer.after(100, function () {
+                controller.moveSprite(sprite_player, 0, 0)
+                timer.after(100, function () {
+                    controller.moveSprite(sprite_player, 0, 0)
+                })
+            })
+        })
     })
 })
 function createBullet (_origin: Sprite, _destination: Sprite) {
@@ -7833,6 +7860,15 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, 
         completeLevel()
         tiles.setWallAt(sprite_NPC.tilemapLocation(), false)
         playCutsceneSaveNPC(sprite_NPC, -75, 0, 2500, "Yahoo!!")
+        timer.after(100, function () {
+            controller.moveSprite(sprite_player, 0, 0)
+            timer.after(100, function () {
+                controller.moveSprite(sprite_player, 0, 0)
+                timer.after(100, function () {
+                    controller.moveSprite(sprite_player, 0, 0)
+                })
+            })
+        })
     })
 })
 function createLevelCompleteArray () {

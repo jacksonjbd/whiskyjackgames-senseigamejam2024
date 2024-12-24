@@ -1,17 +1,14 @@
 {
-    "name": "W-SenseiGameJam2024",
-    "version": "1.0.2",
+    "name": "Robotron3000: Save the Cats!",
+    "version": "1.1.1",
     "description": "",
     "dependencies": {
         "device": "*",
         "animation": "*",
         "Timers": "github:microsoft/arcade-timers#v1.1.0",
-        "Sprite Grid": "github:microsoft/arcade-grid#v1.3.0",
         "controller": "*",
-        "arcade-character-animations": "github:microsoft/arcade-character-animations#v0.0.2",
         "arcade-text": "github:microsoft/arcade-text#v1.3.0",
         "Color Fading": "github:jwunderl/pxt-color#v0.2.3",
-        "arcade-minimap": "github:microsoft/arcade-minimap#v0.6.1",
         "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1"
     },
     "files": [
@@ -34,5 +31,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj"
+    "preferredEditor": "tsprj"
 }
