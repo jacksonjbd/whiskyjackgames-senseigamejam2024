@@ -2283,7 +2283,7 @@ function createDrones () {
             sprite_bat = sprites.create(assets.image`BatSleeping`, SpriteKind.Enemy)
             sprite_bat.z = 100
             tiles.placeOnTile(sprite_bat, value)
-            sprites.setDataNumber(sprite_bat, "data_health", 3)
+            sprites.setDataNumber(sprite_bat, "data_health", 1)
             sprites.setDataString(sprite_bat, "data_type", "drone")
             sprite_bat.setFlag(SpriteFlag.Ghost, true)
         }
