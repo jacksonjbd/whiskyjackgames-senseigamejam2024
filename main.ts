@@ -36,7 +36,107 @@ namespace SpriteKind {
 }
 
 
-
+let bool_isEnemyMusic = false
+let bool_isNPCMusic = false
+let _num_barrelPitch = 0
+let num_hitOffset = 0
+let anim_death: animation.Animation = null
+let anim_walkRight: animation.Animation = null
+let anim_idleRight: animation.Animation = null
+let anim_walkLeft: animation.Animation = null
+let anim_idleLeft: animation.Animation = null
+let anim_walkUp: animation.Animation = null
+let anim_idleUp: animation.Animation = null
+let anim_walkDown: animation.Animation = null
+let anim_idleDown: animation.Animation = null
+let _array_animSprites: Image[] = []
+let sprite_tree: Sprite = null
+let sprite_bullet: Sprite = null
+let num_lastDialogNPC3 = 0
+let sprite_dungeonMusic: Sprite = null
+let _num_knockbackZ = 0
+let _num_knockbackY = 0
+let _num_knockbackX = 0
+let text_moneyAdd: TextSprite = null
+let bool_isDungeonMusic = false
+let _num_bushPitch = 0
+let bool_isTransition = false
+let sprite_cameraFollow: Sprite = null
+let bool_isStunned = false
+let num_lastHit = 0
+let sprite_questIcon: Sprite = null
+let sprite_NPC: Sprite = null
+let _num_dialogLength = 0
+let num_lastDialogNPC4 = 0
+let bool_isNPCTalking = false
+let palette_black = 0
+let palette_gray = 0
+let palette_colourLight = 0
+let palette_colourDark = 0
+let palette_white = 0
+let _num_finalTime = 0
+let _sprite_lever: Sprite = null
+let _sprite_debris: Sprite = null
+let sprite_bat: Sprite = null
+let sprite_hudHealth: Sprite = null
+let num_currentHealth = 0
+let _bool_isHealthAnimating = false
+let text_money: TextSprite = null
+let num_currentMoney = 0
+let num_currentMoneyAdd = 0
+let text_timer: TextSprite = null
+let sprite_pickup: Sprite = null
+let sprite_cameraControl: Sprite = null
+let array_levelComplete2D: number[][] = []
+let bool_isMusicEnd = false
+let sprite_sword: Sprite = null
+let Bool_isAttacking = false
+let bool_isPlayerFrozen = false
+let bool_isPlayerDead = false
+let sprite_enemyWaker: Sprite = null
+let sprite_player: Sprite = null
+let num_lastFacing = 0
+let sprite_playerInteract: Sprite = null
+let num_playerSpeed = 0
+let num_winCondition = 0
+let bool_settingMusic = false
+let bool_hasQuest = false
+let bool_isMusic = false
+let _bool_isEnemyRoom = false
+let _num_bigMoneyChance = 0
+let _num_sparkleDelay = 0
+let num_moneyValue3 = 0
+let num_moneyValue2 = 0
+let num_moneyValue1 = 0
+let bool_torchChange = false
+let num_lastDialogNPC2 = 0
+let num_lastDialogNPC1 = 0
+let bool_isGameOver = false
+music.setVolume(255)
+tiles.setCurrentTilemap(tilemap`Dungeon`)
+bool_isGameOver = false
+let bool_mapOut = false
+createPlayerController(75)
+createHUD()
+createCameraController()
+createTreesInView()
+num_lastDialogNPC1 = 0
+num_lastDialogNPC2 = 0
+bool_torchChange = true
+num_moneyValue1 = 5
+num_moneyValue2 = 20
+num_moneyValue3 = 100
+_num_sparkleDelay = 45
+_num_bigMoneyChance = 20
+_bool_isEnemyRoom = true
+let PlayerDead = true
+bool_isMusic = true
+bool_hasQuest = true
+let bool_isSettingUp = true
+bool_settingMusic = true
+num_winCondition = 0
+num_playerSpeed = 75
+createLevelCompleteArray()
 
 
 
@@ -6366,60 +6466,12 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, 
 })
 function createLevelCompleteArray () {
     array_levelComplete2D = [
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ],
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ],
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ],
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ],
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ],
-    [
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0
-    ]
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0]
     ]
 }
 function wakeUpDrone (_drone: Sprite) {
@@ -7054,9 +7106,7 @@ function setPaletteGreen () {
     palette_colourLight = color.parseColorString("#78dc52")
     palette_colourDark = color.parseColorString("#249ca3")
 }
-/**
- * Player Funcs
- */
+
 function createPlayerController (_speed: number) {
     sprite_sword = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -7109,9 +7159,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile68`, function (sprite, 
     bool_isMusic = false
     num_playerSpeed = 25
 })
-/**
- * Object Funcs
- */
+
 function destroyBarrel (_column: number, _row: number) {
     tiles.setWallAt(tiles.getTileLocation(_column, _row), false)
     if (Math.percentChance(33)) {
@@ -7193,9 +7241,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile78`, function (sprite, 
 scene.onOverlapTile(SpriteKind.Sword, assets.tile`Empty3`, function (sprite, location) {
     endGame(location.column, location.row)
 })
-/**
- * Game Funcs
- */
+
 function setPaletteRed () {
     palette_white = color.parseColorString("#e5cdc4")
     palette_gray = color.parseColorString("#98807B")
@@ -7210,9 +7256,7 @@ function isInView (_x: number, _y: number, _camera: Sprite) {
         return false
     }
 }
-/**
- * Level Funcs
- */
+
 function updateTorches () {
     if (bool_torchChange) {
         bool_torchChange = false
@@ -7226,9 +7270,7 @@ function updateTorches () {
         }
     }
 }
-/**
- * Music Funcs
- */
+
 function destroyDungeonMusicOutOfView () {
     for (let value of sprites.allOfKind(SpriteKind.DungeonMusic)) {
         if (isInView(value.x, value.x, sprite_cameraControl)) {
@@ -7280,107 +7322,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile70`, function (sprite, 
     bool_isMusic = true
     num_playerSpeed = 40
 })
-let bool_isEnemyMusic = false
-let bool_isNPCMusic = false
-let _num_barrelPitch = 0
-let num_hitOffset = 0
-let anim_death: animation.Animation = null
-let anim_walkRight: animation.Animation = null
-let anim_idleRight: animation.Animation = null
-let anim_walkLeft: animation.Animation = null
-let anim_idleLeft: animation.Animation = null
-let anim_walkUp: animation.Animation = null
-let anim_idleUp: animation.Animation = null
-let anim_walkDown: animation.Animation = null
-let anim_idleDown: animation.Animation = null
-let _array_animSprites: Image[] = []
-let sprite_tree: Sprite = null
-let sprite_bullet: Sprite = null
-let num_lastDialogNPC3 = 0
-let sprite_dungeonMusic: Sprite = null
-let _num_knockbackZ = 0
-let _num_knockbackY = 0
-let _num_knockbackX = 0
-let text_moneyAdd: TextSprite = null
-let bool_isDungeonMusic = false
-let _num_bushPitch = 0
-let bool_isTransition = false
-let sprite_cameraFollow: Sprite = null
-let bool_isStunned = false
-let num_lastHit = 0
-let sprite_questIcon: Sprite = null
-let sprite_NPC: Sprite = null
-let _num_dialogLength = 0
-let num_lastDialogNPC4 = 0
-let bool_isNPCTalking = false
-let palette_black = 0
-let palette_gray = 0
-let palette_colourLight = 0
-let palette_colourDark = 0
-let palette_white = 0
-let _num_finalTime = 0
-let _sprite_lever: Sprite = null
-let _sprite_debris: Sprite = null
-let sprite_bat: Sprite = null
-let sprite_hudHealth: Sprite = null
-let num_currentHealth = 0
-let _bool_isHealthAnimating = false
-let text_money: TextSprite = null
-let num_currentMoney = 0
-let num_currentMoneyAdd = 0
-let text_timer: TextSprite = null
-let sprite_pickup: Sprite = null
-let sprite_cameraControl: Sprite = null
-let array_levelComplete2D: number[][] = []
-let bool_isMusicEnd = false
-let sprite_sword: Sprite = null
-let Bool_isAttacking = false
-let bool_isPlayerFrozen = false
-let bool_isPlayerDead = false
-let sprite_enemyWaker: Sprite = null
-let sprite_player: Sprite = null
-let num_lastFacing = 0
-let sprite_playerInteract: Sprite = null
-let num_playerSpeed = 0
-let num_winCondition = 0
-let bool_settingMusic = false
-let bool_hasQuest = false
-let bool_isMusic = false
-let _bool_isEnemyRoom = false
-let _num_bigMoneyChance = 0
-let _num_sparkleDelay = 0
-let num_moneyValue3 = 0
-let num_moneyValue2 = 0
-let num_moneyValue1 = 0
-let bool_torchChange = false
-let num_lastDialogNPC2 = 0
-let num_lastDialogNPC1 = 0
-let bool_isGameOver = false
-music.setVolume(255)
-tiles.setCurrentTilemap(tilemap`Dungeon`)
-bool_isGameOver = false
-let bool_mapOut = false
-createPlayerController(75)
-createHUD()
-createCameraController()
-createTreesInView()
-num_lastDialogNPC1 = 0
-num_lastDialogNPC2 = 0
-bool_torchChange = true
-num_moneyValue1 = 5
-num_moneyValue2 = 20
-num_moneyValue3 = 100
-_num_sparkleDelay = 45
-_num_bigMoneyChance = 20
-_bool_isEnemyRoom = true
-let PlayerDead = true
-bool_isMusic = true
-bool_hasQuest = true
-let bool_isSettingUp = true
-bool_settingMusic = true
-num_winCondition = 0
-num_playerSpeed = 75
-createLevelCompleteArray()
+
 game.onUpdate(function () {
     if (bool_isSettingUp) {
         bool_isSettingUp = false
