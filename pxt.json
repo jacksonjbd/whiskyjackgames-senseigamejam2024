@@ -12,14 +12,16 @@
         "arcade-sprite-data": "github:microsoft/arcade-sprite-data#v0.2.1"
     },
     "files": [
-        "main.blocks",
         "main.ts",
         "README.md",
         "assets.json",
         "tilemap.g.jres",
         "tilemap.g.ts",
         "images.g.jres",
-        "images.g.ts"
+        "images.g.ts",
+        "userInterface.ts",
+        "audio.ts",
+        "playerController.ts"
     ],
     "testFiles": [
         "test.ts"
