@@ -10,3 +10,16 @@ function playHitSound() {
         InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
+
+function playCatNoise() {
+    music.play(music.createSoundEffect(
+        WaveShape.Triangle,
+        894,
+        randint(2500, 3000),
+        85,
+        0,
+        100,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Linear
+    ), music.PlaybackMode.InBackground)
+}

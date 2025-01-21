@@ -21,7 +21,11 @@
         "images.g.ts",
         "userInterface.ts",
         "audio.ts",
-        "playerController.ts"
+        "playerController.ts",
+        "enemyDrones.ts",
+        "pickups.ts",
+        "finale.ts",
+        "levels.ts"
     ],
     "testFiles": [
         "test.ts"

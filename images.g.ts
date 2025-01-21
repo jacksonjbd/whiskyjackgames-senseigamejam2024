@@ -391,6 +391,48 @@ c d d d d b c b b c c d d c c .
 . . . . c c b b b c c . . . . . 
 . . . . . . c c c . . . . . . . 
 `;
+            case "image12":
+            case "BlueGem":return img`
+c c c c c c c . . . . 
+c d d d d d c c . . . 
+c d c c c c d c c . . 
+c d c d d 6 c d c c . 
+c d c 6 c d d c d c c 
+c d c c c 6 d 6 c d c 
+c c d c 6 c c 6 c d c 
+. c c d c c 6 6 c d c 
+. . c c d c c c c d c 
+. . . c c d d d d d c 
+. . . . c c c c c c c 
+`;
+            case "image13":
+            case "GreenGem":return img`
+c c c c c c c . . . . 
+c d d d d d c c . . . 
+c d c c c c d c c . . 
+c d c d d 7 c d c c . 
+c d c 7 6 d d c d c c 
+c d c 6 6 7 d 7 c d c 
+c c d c 7 6 6 7 c d c 
+. c c d c 6 7 7 c d c 
+. . c c d c c c c d c 
+. . . c c d d d d d c 
+. . . . c c c c c c c 
+`;
+            case "image14":
+            case "GreenGemFlash":return img`
+c c c c c c c . . . . 
+c b b b b b c c . . . 
+c b c c c c b c c . . 
+c b c b b b c b c c . 
+c b c b b b b c b c c 
+c b c b b b b b c b c 
+c c b c b b b b c b c 
+. c c b c b b b c b c 
+. . c c b c c c c b c 
+. . . c c b b b b b c 
+. . . . c c c c c c c 
+`;
         }
         return null;
     })
