@@ -36,28 +36,16 @@ namespace SpriteKind {
 }
 
 
-let bool_isEnemyMusic = false
-let bool_isNPCMusic = false
-let _num_barrelPitch = 0
+
+
+
 let num_hitOffset = 0
-let anim_death: animation.Animation = null
-let anim_walkRight: animation.Animation = null
-let anim_idleRight: animation.Animation = null
-let anim_walkLeft: animation.Animation = null
-let anim_idleLeft: animation.Animation = null
-let anim_walkUp: animation.Animation = null
-let anim_idleUp: animation.Animation = null
-let anim_walkDown: animation.Animation = null
-let anim_idleDown: animation.Animation = null
-let _array_animSprites: Image[] = []
-let sprite_tree: Sprite = null
 let sprite_bullet: Sprite = null
 let num_lastDialogNPC3 = 0
 let sprite_dungeonMusic: Sprite = null
 let _num_knockbackZ = 0
 let _num_knockbackY = 0
 let _num_knockbackX = 0
-let text_moneyAdd: TextSprite = null
 let bool_isDungeonMusic = false
 let _num_bushPitch = 0
 let bool_isTransition = false
@@ -94,7 +82,6 @@ let Bool_isAttacking = false
 let bool_isPlayerFrozen = false
 let bool_isPlayerDead = false
 let sprite_enemyWaker: Sprite = null
-let sprite_player: Sprite = null
 let num_lastFacing = 0
 let sprite_playerInteract: Sprite = null
 let num_playerSpeed = 0
@@ -112,6 +99,8 @@ let bool_torchChange = false
 let num_lastDialogNPC2 = 0
 let num_lastDialogNPC1 = 0
 let bool_isGameOver = false
+
+
 music.setVolume(255)
 tiles.setCurrentTilemap(tilemap`Dungeon`)
 bool_isGameOver = false
@@ -140,192 +129,18 @@ createLevelCompleteArray()
 
 
 
+sprites.onOverlap(SpriteKind.Player, SpriteKind.Pickup, function (sprite, otherSprite) {
+    if (sprites.readDataString(otherSprite, "data_type") == "heart") {
+        pickupHeart(otherSprite, sprite)
+    } else if (sprites.readDataString(otherSprite, "data_type") == "money") {
+        pickupMoney(otherSprite, sprite)
+    }
+})
 
-function updateHUD () {
-    if (!(bool_isGameOver)) {
-        text_timer.setText(convertToText(Math.round(game.runtime() / 1000)))
-    }
-    if (num_currentMoneyAdd > 0) {
-        num_currentMoney += 1
-        num_currentMoneyAdd += -1
-        text_money.setText(convertToText(num_currentMoney))
-    }
-    if (!(_bool_isHealthAnimating)) {
-        if (num_currentHealth == 1) {
-            animation.runImageAnimation(
-            sprite_hudHealth,
-            [img`
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ...ccccc.ccccc..................................
-                ..cc677ccc677cc.................................
-                .cc67dd7c67dd7cc................................
-                .c6777dd7777dd7c.....ccccccc.........ccccccc....
-                .c67777d77777d7c....ccbbcbbcc.......ccbbcbbcc...
-                .c6777777777777c....cbccbccbc.......cbccbccbc...
-                .c6777777777777c....cbcccccbc.......cbcccccbc...
-                .cc67777777777cc....ccbcccbcc.......ccbcccbcc...
-                ..cc677777777cc......ccbcbcc.........ccbcbcc....
-                ...cc6777777cc........ccbcc...........ccbcc.....
-                ....cc67777cc..........ccc.............ccc......
-                .....cc677cc....................................
-                ......cc6cc.....................................
-                .......ccc......................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                `],
-            500,
-            false
-            )
-        } else if (num_currentHealth == 2) {
-            animation.runImageAnimation(
-            sprite_hudHealth,
-            [img`
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ...ccccc.ccccc.....ccccc.ccccc..................
-                ..cc677ccc677cc...cc677ccc677cc.................
-                .cc67dd7c67dd7cc.cc67dd7c67dd7cc................
-                .c6777dd7777dd7c.c6777dd7777dd7c.....ccccccc....
-                .c67777d77777d7c.c67777d77777d7c....ccbbcbbcc...
-                .c6777777777777c.c6777777777777c....cbccbccbc...
-                .c6777777777777c.c6777777777777c....cbcccccbc...
-                .cc67777777777cc.cc67777777777cc....ccbcccbcc...
-                ..cc677777777cc...cc677777777cc......ccbcbcc....
-                ...cc6777777cc.....cc6777777cc........ccbcc.....
-                ....cc67777cc.......cc67777cc..........ccc......
-                .....cc677cc.........cc677cc....................
-                ......cc6cc...........cc6cc.....................
-                .......ccc.............ccc......................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                `],
-            500,
-            false
-            )
-        } else if (num_currentHealth == 3) {
-            animation.runImageAnimation(
-            sprite_hudHealth,
-            [img`
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ...ccccc.ccccc.....ccccc.ccccc.....ccccc.ccccc..
-                ..cc677ccc677cc...cc677ccc677cc...cc677ccc677cc.
-                .cc67dd7c67dd7cc.cc67dd7c67dd7cc.cc67dd7c67dd7cc
-                .c6777dd7777dd7c.c6777dd7777dd7c.c6777dd7777dd7c
-                .c67777d77777d7c.c67777d77777d7c.c67777d77777d7c
-                .c6777777777777c.c6777777777777c.c6777777777777c
-                .c6777777777777c.c6777777777777c.c6777777777777c
-                .cc67777777777cc.cc67777777777cc.cc67777777777cc
-                ..cc677777777cc...cc677777777cc...cc677777777cc.
-                ...cc6777777cc.....cc6777777cc.....cc6777777cc..
-                ....cc67777cc.......cc67777cc.......cc67777cc...
-                .....cc677cc.........cc677cc.........cc677cc....
-                ......cc6cc...........cc6cc...........cc6cc.....
-                .......ccc.............ccc.............ccc......
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                ................................................
-                `],
-            500,
-            false
-            )
-        }
-    }
-}
 controller.B.onEvent(ControllerButtonEvent.Pressed, function () {
     playerInteract()
 })
-function createBats () {
+function createBats() {
     for (let value of tiles.getTilesByType(assets.tile`myTile55`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             sprite_bat = sprites.create(img`
@@ -354,14 +169,14 @@ function createBats () {
         }
     }
 }
-function checkEnemyRoomFinished () {
+function checkEnemyRoomFinished() {
     if (_bool_isEnemyRoom && (sprites.allOfKind(SpriteKind.Enemy).length == 0 && sprites.allOfKind(SpriteKind.BatSleeping).length == 0 && sprites.allOfKind(SpriteKind.EnemyHurt).length == 0)) {
         _bool_isEnemyRoom = false
         completeLevel()
         openDoorsInView()
     }
 }
-function createSmokePosition (_x: number, _y: number) {
+function createSmokePosition(_x: number, _y: number) {
     _sprite_debris = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -381,8 +196,8 @@ function createSmokePosition (_x: number, _y: number) {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Dummy)
     animation.runImageAnimation(
-    _sprite_debris,
-    [img`
+        _sprite_debris,
+        [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -399,7 +214,7 @@ function createSmokePosition (_x: number, _y: number) {
         . . . b b b b b b b b b b b . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . b b b . . . . . . 
         . . . . b . b b d b b . . b . . 
@@ -416,7 +231,7 @@ function createSmokePosition (_x: number, _y: number) {
         . . b . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . b . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . b . . . . 
         b . . . b . . b b b . . b . . . 
@@ -433,7 +248,7 @@ function createSmokePosition (_x: number, _y: number) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . b . . . . . . . 
@@ -451,21 +266,21 @@ function createSmokePosition (_x: number, _y: number) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `],
-    150,
-    false
+        150,
+        false
     )
     _sprite_debris.lifespan = 750
     _sprite_debris.vy = -5
     _sprite_debris.setPosition(_x, _y)
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    1,
-    135,
-    40,
-    0,
-    10,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Linear
+        WaveShape.Noise,
+        1,
+        135,
+        40,
+        0,
+        10,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
     timer.after(10, function () {
         music.play(music.createSoundEffect(WaveShape.Noise, 135, 1, 40, 0, 200, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
@@ -474,7 +289,7 @@ function createSmokePosition (_x: number, _y: number) {
 scene.onOverlapTile(SpriteKind.Sword, assets.tile`BigPot`, function (sprite, location) {
     destroyBarrel(location.column, location.row)
 })
-function endGame (_column: number, _row: number) {
+function endGame(_column: number, _row: number) {
     controller.moveSprite(sprite_player, 0, 0)
     _sprite_lever = sprites.create(img`
         . . . . . . . . . . . . . . . . 
@@ -499,8 +314,8 @@ function endGame (_column: number, _row: number) {
     bool_isPlayerFrozen = true
     tiles.setTileAt(tiles.getTileLocation(_column, _row), assets.tile`Empty6`)
     animation.runImageAnimation(
-    _sprite_lever,
-    [img`
+        _sprite_lever,
+        [img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -517,7 +332,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -534,7 +349,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -551,7 +366,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -568,7 +383,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -585,7 +400,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -602,7 +417,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -619,7 +434,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -636,7 +451,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -653,7 +468,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -670,7 +485,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -687,7 +502,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -704,7 +519,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -721,7 +536,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -738,7 +553,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 7 7 c 7 7 c 7 7 6 6 6 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
         6 7 7 7 7 c 7 d d 7 c 7 7 7 7 6 
@@ -755,7 +570,7 @@ function endGame (_column: number, _row: number) {
         6 6 6 6 c c c c c c c c 6 6 6 6 
         c c c 6 6 6 6 6 6 6 6 6 6 c c c 
         c c c c c c c c c c c c c c c c 
-        `,img`
+        `, img`
         6 6 6 6 6 6 c 6 6 c 6 6 6 6 6 6 
         6 7 7 7 6 c 6 c c 6 c 6 7 7 7 6 
         6 7 7 7 6 c 6 c c 6 c 6 7 7 7 6 
@@ -773,60 +588,60 @@ function endGame (_column: number, _row: number) {
         c c c 6 c c c c c c c c 6 c c c 
         c c c c c c c c c c c c c c c c 
         `],
-    500,
-    false
+        500,
+        false
     )
     tiles.placeOnTile(_sprite_lever, tiles.getTileLocation(_column, _row))
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    4169,
-    5000,
-    80,
-    0,
-    50,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Curve
-    ), music.PlaybackMode.InBackground)
-    music.play(music.createSoundEffect(
-    WaveShape.Square,
-    98,
-    98,
-    0,
-    100,
-    7500,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Curve
-    ), music.PlaybackMode.InBackground)
-    timer.after(7500, function () {
-        music.play(music.createSoundEffect(
-        WaveShape.Noise,
-        5000,
-        5000,
-        40,
-        0,
-        50,
-        SoundExpressionEffect.None,
-        InterpolationCurve.Curve
-        ), music.PlaybackMode.InBackground)
-        music.play(music.createSoundEffect(
         WaveShape.Noise,
         4169,
         5000,
-        40,
+        80,
         0,
         50,
         SoundExpressionEffect.None,
         InterpolationCurve.Curve
+    ), music.PlaybackMode.InBackground)
+    music.play(music.createSoundEffect(
+        WaveShape.Square,
+        98,
+        98,
+        0,
+        100,
+        7500,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Curve
+    ), music.PlaybackMode.InBackground)
+    timer.after(7500, function () {
+        music.play(music.createSoundEffect(
+            WaveShape.Noise,
+            5000,
+            5000,
+            40,
+            0,
+            50,
+            SoundExpressionEffect.None,
+            InterpolationCurve.Curve
         ), music.PlaybackMode.InBackground)
         music.play(music.createSoundEffect(
-        WaveShape.Noise,
-        5000,
-        2978,
-        40,
-        0,
-        50,
-        SoundExpressionEffect.None,
-        InterpolationCurve.Curve
+            WaveShape.Noise,
+            4169,
+            5000,
+            40,
+            0,
+            50,
+            SoundExpressionEffect.None,
+            InterpolationCurve.Curve
+        ), music.PlaybackMode.InBackground)
+        music.play(music.createSoundEffect(
+            WaveShape.Noise,
+            5000,
+            2978,
+            40,
+            0,
+            50,
+            SoundExpressionEffect.None,
+            InterpolationCurve.Curve
         ), music.PlaybackMode.InBackground)
         for (let index = 0; index <= 4; index++) {
             for (let index2 = 0; index2 <= 6; index2++) {
@@ -843,7 +658,7 @@ function endGame (_column: number, _row: number) {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile135`, function (sprite, location) {
     flipSwitch(assets.tile`myTile136`, assets.tile`myTile101`, assets.tile`myTile102`, assets.tile`myTile103`, location.column, location.row)
 })
-function wakeUpRobots () {
+function wakeUpRobots() {
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
         if (sprites.readDataString(value, "data_type") == "drone") {
             wakeUpDrone(value)
@@ -852,7 +667,7 @@ function wakeUpRobots () {
         }
     }
 }
-function applyPalette () {
+function applyPalette() {
     color.setColor(1, palette_white)
     color.setColor(2, palette_colourDark)
     color.setColor(3, palette_colourLight)
@@ -869,7 +684,7 @@ function applyPalette () {
     color.setColor(14, palette_gray)
     color.setColor(15, palette_black)
 }
-function createDrones () {
+function createDrones() {
     for (let value of tiles.getTilesByType(assets.tile`myTile0`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             sprite_bat = sprites.create(assets.image`BatSleeping`, SpriteKind.Enemy)
@@ -881,7 +696,7 @@ function createDrones () {
         }
     }
 }
-function flipSwitch (_switchDown: Image, _blockUp: Image, _blockMid: Image, _blockDown: Image, _column: number, _row: number) {
+function flipSwitch(_switchDown: Image, _blockUp: Image, _blockMid: Image, _blockDown: Image, _column: number, _row: number) {
     tiles.setTileAt(tiles.getTileLocation(_column, _row), _switchDown)
     music.play(music.createSoundEffect(WaveShape.Noise, 3300, 330, 255, 81, 50, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     timer.after(100, function () {
@@ -911,12 +726,12 @@ function flipSwitch (_switchDown: Image, _blockUp: Image, _blockMid: Image, _blo
         })
     })
 }
-function cat3Dialog (_cat3: Sprite) {
+function cat3Dialog(_cat3: Sprite) {
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
         animation.runImageAnimation(
-        _cat3,
-        [img`
+            _cat3,
+            [img`
             . . . . . . . . . . . . . . . . 
             . c c c . . . . c c c . . . . . 
             . c d d c . . c d d c . . . . . 
@@ -933,7 +748,7 @@ function cat3Dialog (_cat3: Sprite) {
             . . . c d c c d c c d d b c . . 
             . . . c c . c c . c c c c . . . 
             . . . . . . . . . . . . . . . . 
-            `,img`
+            `, img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . c c c . . . . c c c . . . . . 
@@ -951,8 +766,8 @@ function cat3Dialog (_cat3: Sprite) {
             . . . c c . c c . c c c c . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
         playCatNoise()
         if (num_lastDialogNPC4 == 0) {
@@ -971,8 +786,8 @@ function cat3Dialog (_cat3: Sprite) {
         timer.after(_num_dialogLength, function () {
             bool_isNPCTalking = false
             animation.runImageAnimation(
-            _cat3,
-            [img`
+                _cat3,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . c c c . . . . c c c . . . . . 
                 . c d d c . . c d d c . . . . . 
@@ -990,8 +805,8 @@ function cat3Dialog (_cat3: Sprite) {
                 . . . c c . c c . c c c c . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            200,
-            false
+                200,
+                false
             )
         })
     }
@@ -999,7 +814,7 @@ function cat3Dialog (_cat3: Sprite) {
 /**
  * NPC Funcs
  */
-function createNPCInView () {
+function createNPCInView() {
     bool_isNPCTalking = false
     for (let value of tiles.getTilesByType(assets.tile`myTile49`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
@@ -1027,8 +842,8 @@ function createNPCInView () {
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Quest)
                 animation.runImageAnimation(
-                sprite_questIcon,
-                [img`
+                    sprite_questIcon,
+                    [img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1045,7 +860,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
@@ -1062,7 +877,7 @@ function createNPCInView () {
                     . . . . . c d d d d c . . . . . 
                     . . . . . c b b b b c . . . . . 
                     . . . . . c c c c c c . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -1079,7 +894,7 @@ function createNPCInView () {
                     . . . . . c d d d d c . . . . . 
                     . . . . . c b b b b c . . . . . 
                     . . . . . c c c c c c . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1096,7 +911,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . c d d d d c . . . . . 
                     . . . . . c d d d d c . . . . . 
                     . . . . . c d d d d c . . . . . 
@@ -1113,7 +928,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1130,7 +945,7 @@ function createNPCInView () {
                     . . . . . . c c c c . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . c c c c c c c c c c . . . 
                     . . . c d d d d d d d d c . . . 
                     . . . c d d d d d d d d c . . . 
@@ -1147,7 +962,7 @@ function createNPCInView () {
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1164,7 +979,7 @@ function createNPCInView () {
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1181,7 +996,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
@@ -1198,24 +1013,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . . . . . . 
-                    . . . . c c c c c c c c . . . . 
-                    . . . . c d d d d d d c . . . . 
-                    . . . . c d d d d d d c . . . . 
-                    . . . . c d d d d d d c . . . . 
-                    . . . . c b d d d d b c . . . . 
-                    . . . . c c d d d d c c . . . . 
-                    . . . . . c d d d d c . . . . . 
-                    . . . . . c b d d b c . . . . . 
-                    . . . . . c c d d c c . . . . . 
-                    . . . . . . c d d c . . . . . . 
-                    . . . . . . c b b c . . . . . . 
-                    . . . . . . c d d c . . . . . . 
-                    . . . . . . c d d c . . . . . . 
-                    . . . . . . c b b c . . . . . . 
-                    . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1232,7 +1030,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1249,7 +1047,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1266,7 +1064,7 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1283,7 +1081,24 @@ function createNPCInView () {
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
-                    `,img`
+                    `, img`
+                    . . . . . . . . . . . . . . . . 
+                    . . . . c c c c c c c c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c d d d d d d c . . . . 
+                    . . . . c b d d d d b c . . . . 
+                    . . . . c c d d d d c c . . . . 
+                    . . . . . c d d d d c . . . . . 
+                    . . . . . c b d d b c . . . . . 
+                    . . . . . c c d d c c . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c d d c . . . . . . 
+                    . . . . . . c b b c . . . . . . 
+                    . . . . . . c c c c . . . . . . 
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . c c c c c c c c . . . . 
                     . . . . c d d d d d d c . . . . 
@@ -1301,8 +1116,8 @@ function createNPCInView () {
                     . . . . . . c b b c . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     `],
-                100,
-                true
+                    100,
+                    true
                 )
                 sprite_questIcon.z = 101
                 tiles.placeOnTile(sprite_questIcon, value)
@@ -1445,249 +1260,15 @@ function createNPCInView () {
 sprites.onOverlap(SpriteKind.camera, SpriteKind.camera, function (sprite, otherSprite) {
     cameraTransitionEnd()
 })
-function pickupHeart (_pickup: Sprite, _player: Sprite) {
-    if (num_currentHealth < 3) {
-        _pickup.setFlag(SpriteFlag.Ghost, true)
-        _pickup.z = 300
-        _pickup.lifespan = 200
-        animation.runImageAnimation(
-        _pickup,
-        [img`
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 6 7 7 7 6 c 
-            c 6 6 6 6 6 c 
-            . c c c c c . 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 6 7 6 6 c 
-            c c c c c c c 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 6 7 7 7 6 c 
-            c 6 6 6 6 6 c 
-            . c c c c c . 
-            `,img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . c c c . . 
-            `,img`
-            . . . c . . . 
-            . . c 7 c . . 
-            . . c 7 c . . 
-            . . c 6 c . . 
-            . . . c . . . 
-            . . . . . . . 
-            . . . . . . . 
-            `],
-        30,
-        false
-        )
-        music.play(music.createSoundEffect(WaveShape.Sine, 1222, 1, 121, 170, 100, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
-        if (num_currentHealth < 3) {
-            num_currentHealth += 1
-        }
-        timer.after(100, function () {
-            music.play(music.createSoundEffect(
-            WaveShape.Sine,
-            1,
-            3226,
-            121,
-            170,
-            100,
-            SoundExpressionEffect.None,
-            InterpolationCurve.Linear
-            ), music.PlaybackMode.InBackground)
-            _pickup.vy = -50
-            timer.after(100, function () {
-                music.play(music.createSoundEffect(
-                WaveShape.Sine,
-                3226,
-                3226,
-                170,
-                0,
-                100,
-                SoundExpressionEffect.None,
-                InterpolationCurve.Linear
-                ), music.PlaybackMode.InBackground)
-            })
-        })
-    } else {
-        animation.runImageAnimation(
-        _pickup,
-        [img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . c c c c c . 
-            . c 7 c 7 c . 
-            . c 7 7 7 c . 
-            . c 7 7 7 c . 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 6 7 7 7 6 c 
-            c 6 6 6 6 6 c 
-            . c c c c c . 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 6 7 7 7 6 c 
-            c 6 6 6 6 6 c 
-            . c c c c c . 
-            `,img`
-            . . . . . . . 
-            . . . . . . . 
-            c c c . c c c 
-            c 7 7 c 7 7 c 
-            c 6 7 7 7 6 c 
-            c 6 6 6 6 6 c 
-            . c c c c c . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . . . . . . . 
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 6 6 c . 
-            . . c c c . . 
-            `,img`
-            . c c . c c . 
-            c 7 7 c 7 7 c 
-            c 7 7 7 7 7 c 
-            c 6 7 7 7 6 c 
-            . c 6 7 6 c . 
-            . . c 6 c . . 
-            . . . c . . . 
-            `],
-        50,
-        false
-        )
-        music.play(music.createSoundEffect(WaveShape.Sine, 419, 1, 36, 0, 100, SoundExpressionEffect.None, InterpolationCurve.Curve), music.PlaybackMode.InBackground)
-        knockback(_pickup, _player, 75, 200)
-    }
-}
+
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     playerAttack()
 })
-function droneAttack (_drone: Sprite) {
+function droneAttack(_drone: Sprite) {
     sprites.setDataNumber(_drone, "data_lastAttackHealth", sprites.readDataNumber(_drone, "data_health"))
     animation.runImageAnimation(
-    _drone,
-    [img`
+        _drone,
+        [img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1704,7 +1285,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c c . . . . . 
         . . . c b b d d d d d c . . . . 
         c c c c c c b c d d c . . . . . 
@@ -1721,7 +1302,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c . c c c . . . . . 
         . . c c d d c . c b b c c . . . 
         . c d d d d d c c b d d d c . . 
@@ -1738,7 +1319,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c c . . . . . 
         . . . c b b d d d d d c . . . . 
         c c c c c c b c d d c . . . . . 
@@ -1755,7 +1336,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1772,7 +1353,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c . . . c c c . . . . . 
         . . c c d c c c b d d c c . . . 
         . c d d d d c c b d d d d c . . 
@@ -1789,7 +1370,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1806,7 +1387,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c c . . . . . 
         . . . c b b d d d d d c . . . . 
         c c c c c c b c d d c . . . . . 
@@ -1823,7 +1404,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c . c c c . . . . . 
         . . c c d d c . c b b c c . . . 
         . c d d d d d c c b d d d c . . 
@@ -1840,7 +1421,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c c . . . . . 
         . . . c b b d d d d d c . . . . 
         c c c c c c b c d d c . . . . . 
@@ -1857,7 +1438,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c 7 7 7 c b c . . . . 
         . . . c b b c c c b b c . . . . 
         . . . . c c c c c c c . . . . . 
-        `,img`
+        `, img`
         . . . . c c c . c c c . . . . . 
         . . c c d d c . c b b c c . . . 
         . c d d d d d c c b d d d c . . 
@@ -1874,7 +1455,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b b c c c b b c . . . . 
         . . . c b b b b b b b c . . . . 
         . . . . c c c c c c c . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c c . . . . . 
         . . . c b b d d d d d c . . . . 
         c c c c c c b c d d c . . . . . 
@@ -1891,7 +1472,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b b c c c b b c . . . . 
         . . . c b b b b b b b c . . . . 
         . . . . c c c c c c c . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1908,7 +1489,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b b c c c b b c . . . . 
         . . . c b b b b b b b c . . . . 
         . . . . c c c c c c c . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1925,7 +1506,7 @@ function droneAttack (_drone: Sprite) {
         . . . . c b c b c b c . . . . . 
         . . . . . c c c c c . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1942,7 +1523,7 @@ function droneAttack (_drone: Sprite) {
         . . . . c b c b c b c . . . . . 
         . . . . . c c c c c . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1959,7 +1540,7 @@ function droneAttack (_drone: Sprite) {
         . . . . c b c b c b c . . . . . 
         . . . . . c c c c c . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1976,7 +1557,7 @@ function droneAttack (_drone: Sprite) {
         . . . . c b c b c b c . . . . . 
         . . . . . c c c c c . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -1993,7 +1574,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c c b c c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c c c c . . . . . . 
         . . . c d d d d d c . c c . . . 
         . . c b b b d c d c c b b c . . 
@@ -2010,7 +1591,7 @@ function droneAttack (_drone: Sprite) {
         . . . c b c c b c c b c . . . . 
         . . . . c b c c c b c . . . . . 
         . . . . . c c c c c . . . . . . 
-        `,img`
+        `, img`
         . . . . c c c . c c c . . . . . 
         . . c c d d c . c b b c c . . . 
         . c d d d d d c c b d d d c . . 
@@ -2028,8 +1609,8 @@ function droneAttack (_drone: Sprite) {
         . . . . c b b b b b c . . . . . 
         . . . . . c c c c c . . . . . . 
         `],
-    50,
-    true
+        50,
+        true
     )
     music.play(music.createSoundEffect(WaveShape.Square, 1, 3496, 0, 27, 600, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
     timer.after(600, function () {
@@ -2040,8 +1621,8 @@ function droneAttack (_drone: Sprite) {
         timer.after(400, function () {
             if (sprites.readDataNumber(_drone, "data_health") == sprites.readDataNumber(_drone, "data_lastAttackHealth")) {
                 animation.runImageAnimation(
-                _drone,
-                [img`
+                    _drone,
+                    [img`
                     . . . . c c c c c c . . . . . . 
                     . . . c d d d d d c . c c . . . 
                     . . c b b b d c d c c b b c . . 
@@ -2058,7 +1639,7 @@ function droneAttack (_drone: Sprite) {
                     . . . c b c 7 7 7 c b c . . . . 
                     . . . . c b c c c b c . . . . . 
                     . . . . . c c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . c c c . c c c . . . . . 
                     . . c c d d c . c b b c c . . . 
                     . c d d d d d c c b d d d c . . 
@@ -2075,7 +1656,7 @@ function droneAttack (_drone: Sprite) {
                     . . . c b c 7 7 7 c b c . . . . 
                     . . . . c b c c c b c . . . . . 
                     . . . . . c c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . c c c c c c c . . . . . 
                     . . . c b b d d d d d c . . . . 
                     c c c c c c b c d d c . . . . . 
@@ -2092,7 +1673,7 @@ function droneAttack (_drone: Sprite) {
                     . . . c b c 7 7 7 c b c . . . . 
                     . . . . c b c c c b c . . . . . 
                     . . . . . c c c c c . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . c . . . c c c . . . . . 
                     . . c c d c c c b d d c c . . . 
                     . c d d d d c c b d d d d c . . 
@@ -2110,23 +1691,23 @@ function droneAttack (_drone: Sprite) {
                     . . . . c b c c c b c . . . . . 
                     . . . . . c c c c c . . . . . . 
                     `],
-                50,
-                true
+                    50,
+                    true
                 )
             }
         })
     })
 }
-function playBatHurt () {
+function playBatHurt() {
     music.play(music.createSoundEffect(
-    WaveShape.Sawtooth,
-    randint(4000, 5000),
-    2000,
-    103,
-    0,
-    300,
-    SoundExpressionEffect.Warble,
-    InterpolationCurve.Linear
+        WaveShape.Sawtooth,
+        randint(4000, 5000),
+        2000,
+        103,
+        0,
+        300,
+        SoundExpressionEffect.Warble,
+        InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
 sprites.onOverlap(SpriteKind.Interact, SpriteKind.NPC, function (sprite, otherSprite) {
@@ -2140,7 +1721,7 @@ sprites.onOverlap(SpriteKind.Interact, SpriteKind.NPC, function (sprite, otherSp
         cat3Dialog(otherSprite)
     }
 })
-function hurtPlayer (_player: Sprite, _enemy: Sprite) {
+function hurtPlayer(_player: Sprite, _enemy: Sprite) {
     _player.setFlag(SpriteFlag.GhostThroughSprites, true)
     controller.moveSprite(_player, 0, 0)
     num_lastHit = game.runtime()
@@ -2148,8 +1729,8 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
     _bool_isHealthAnimating = true
     if (num_currentHealth == 3) {
         animation.runImageAnimation(
-        sprite_hudHealth,
-        [img`
+            sprite_hudHealth,
+            [img`
             ................................................
             ................................................
             ................................................
@@ -2198,7 +1779,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2247,7 +1828,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2296,7 +1877,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2345,7 +1926,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2395,13 +1976,13 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             `],
-        50,
-        false
+            50,
+            false
         )
     } else if (num_currentHealth == 2) {
         animation.runImageAnimation(
-        sprite_hudHealth,
-        [img`
+            sprite_hudHealth,
+            [img`
             ................................................
             ................................................
             ................................................
@@ -2450,7 +2031,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2499,7 +2080,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2548,7 +2129,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2597,7 +2178,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2647,8 +2228,8 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             `],
-        50,
-        false
+            50,
+            false
         )
     } else {
         bool_isMusic = false
@@ -2657,8 +2238,8 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
         animation.setAction(_player, ActionKind.DeathAnim)
         music.stopAllSounds()
         animation.runImageAnimation(
-        sprite_hudHealth,
-        [img`
+            sprite_hudHealth,
+            [img`
             ................................................
             ................................................
             ................................................
@@ -2707,7 +2288,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             ................................................
-            `,img`
+            `, img`
             ................................................
             ................................................
             ................................................
@@ -2757,8 +2338,8 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
             ................................................
             ................................................
             `],
-        100,
-        false
+            100,
+            false
         )
         music.play(music.createSoundEffect(WaveShape.Noise, 2200, 0, 251, 0, 300, SoundExpressionEffect.None, InterpolationCurve.Linear), music.PlaybackMode.InBackground)
         controller.moveSprite(_player, 0, 0)
@@ -2805,7 +2386,7 @@ function hurtPlayer (_player: Sprite, _enemy: Sprite) {
         }
     })
 }
-function cameraTransitionEnd () {
+function cameraTransitionEnd() {
     sprite_cameraFollow.setFlag(SpriteFlag.GhostThroughSprites, true)
     sprite_cameraFollow.follow(sprite_cameraControl, 0)
     sprite_cameraFollow.setPosition(sprite_cameraControl.x, sprite_cameraControl.y)
@@ -2826,14 +2407,14 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`Empty1`, function (sprite, lo
     bool_isMusicEnd = false
     num_playerSpeed = 55
 })
-function isLevelComplete () {
+function isLevelComplete() {
     if (array_levelComplete2D[(sprite_cameraControl.tilemapLocation().column - 5) / 10][(sprite_cameraControl.tilemapLocation().row - 4) / 8] == 1) {
         return true
     } else {
         return false
     }
 }
-function destroyBush (_column: number, _row: number) {
+function destroyBush(_column: number, _row: number) {
     tiles.setWallAt(tiles.getTileLocation(_column, _row), false)
     if (Math.percentChance(50)) {
         if (Math.percentChance(50)) {
@@ -2852,42 +2433,42 @@ function destroyBush (_column: number, _row: number) {
     createLeavesTile(_column, _row)
     _num_bushPitch = randint(500, 550)
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    4500,
-    _num_bushPitch * 4,
-    50,
-    0,
-    50,
-    SoundExpressionEffect.Vibrato,
-    InterpolationCurve.Logarithmic
+        WaveShape.Noise,
+        4500,
+        _num_bushPitch * 4,
+        50,
+        0,
+        50,
+        SoundExpressionEffect.Vibrato,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    _num_bushPitch * 4,
-    _num_bushPitch * 2,
-    20,
-    0,
-    200,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
+        WaveShape.Noise,
+        _num_bushPitch * 4,
+        _num_bushPitch * 2,
+        20,
+        0,
+        200,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
 }
 /**
  * Bat Funcs
  */
-function playBatNoise () {
+function playBatNoise() {
     music.play(music.createSoundEffect(
-    WaveShape.Triangle,
-    randint(2000, 2400),
-    4000,
-    80,
-    0,
-    100,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Curve
+        WaveShape.Triangle,
+        randint(2000, 2400),
+        4000,
+        80,
+        0,
+        100,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Curve
     ), music.PlaybackMode.InBackground)
 }
-function createCameraController () {
+function createCameraController() {
     bool_isDungeonMusic = false
     bool_isTransition = false
     sprite_cameraControl = sprites.create(img`
@@ -2929,7 +2510,7 @@ function createCameraController () {
     sprite_cameraFollow.follow(sprite_cameraControl, 400)
     scene.cameraFollowSprite(sprite_cameraFollow)
 }
-function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
+function damageBat(_enemy: Sprite, _damage: number, _origin: Sprite) {
     sprites.setDataNumber(_enemy, "data_isBusy", 1)
     _enemy.setKind(SpriteKind.EnemyHurt)
     sprites.changeDataNumberBy(_enemy, "data_health", _damage)
@@ -2937,8 +2518,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
     knockback(_enemy, _origin, 200, 100)
     if (sprites.readDataNumber(_enemy, "data_health") <= 0) {
         animation.runImageAnimation(
-        _enemy,
-        [img`
+            _enemy,
+            [img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . c c c . . . . . c c c . . . 
@@ -2955,7 +2536,7 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
             d c d b d d d d d d d b d c d . 
             d d d b d c c c c c d b d d d . 
             . . d c d c c c c c d c d . . . 
-            `,img`
+            `, img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . c c c . . . . . c c c . . . 
@@ -2973,8 +2554,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
             c c c b c c c c c c c b c c c . 
             . . c d c c c c c c c d c . . . 
             `],
-        200,
-        false
+            200,
+            false
         )
         playBatDie()
         timer.after(600, function () {
@@ -2984,8 +2565,8 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
         })
     } else if (sprites.readDataNumber(_enemy, "data_health") >= 1) {
         animation.runImageAnimation(
-        _enemy,
-        [img`
+            _enemy,
+            [img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . c c c . . . . . c c c . . . 
@@ -3002,7 +2583,7 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
             d c d b d d d d d d d b d c d . 
             d d d b d c c c c c d b d d d . 
             . . d c d c c c c c d c d . . . 
-            `,img`
+            `, img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . . c c c . . . . . c c c . . . 
@@ -3020,16 +2601,16 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
             c c c b c c c c c c c b c c c . 
             . . c d c c c c c c c d c . . . 
             `],
-        200,
-        false
+            200,
+            false
         )
         playBatHurt()
         timer.after(600, function () {
             sprites.setDataNumber(_enemy, "data_isBusy", 0)
             _enemy.setKind(SpriteKind.Enemy)
             animation.runImageAnimation(
-            _enemy,
-            [img`
+                _enemy,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -3046,7 +2627,7 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 c c c b c c c c c c c b c d c . 
                 c c c b c c c c c c c d c c c . 
                 . . c d c c c c c c c c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -3063,7 +2644,7 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 c d c b c c c c c c c b c d c . 
                 c c c b c c c c c c c b c c c . 
                 . . c d c c c c c c c d c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -3080,7 +2661,7 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 c d c b c c c c c c c b c c c . 
                 c c c d c c c c c c c b c c c . 
                 . . c c c c c c c c c d c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -3098,13 +2679,13 @@ function damageBat (_enemy: Sprite, _damage: number, _origin: Sprite) {
                 c c c b c c c c c c c b c c c . 
                 . . c d c c c c c c c d c . . . 
                 `],
-            100,
-            true
+                100,
+                true
             )
         })
     }
 }
-function closeDoorsInView () {
+function closeDoorsInView() {
     for (let value of tiles.getTilesByType(assets.tile`myTile16`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             tiles.setTileAt(value, assets.tile`myTile71`)
@@ -3143,126 +2724,126 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`Empty5`, function (sprite, lo
 scene.onOverlapTile(SpriteKind.Interact, assets.tile`Empty3`, function (sprite, location) {
     endGame(location.column, location.row)
 })
-function playSparkle () {
+function playSparkle() {
     music.play(music.createSoundEffect(
-    WaveShape.Triangle,
-    2600,
-    2600,
-    206,
-    206,
-    _num_sparkleDelay,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
-    ), music.PlaybackMode.InBackground)
-    timer.after(_num_sparkleDelay, function () {
-        music.play(music.createSoundEffect(
         WaveShape.Triangle,
-        2069,
-        2069,
-        175,
-        175,
+        2600,
+        2600,
+        206,
+        206,
         _num_sparkleDelay,
         SoundExpressionEffect.None,
         InterpolationCurve.Logarithmic
-        ), music.PlaybackMode.InBackground)
-        timer.after(_num_sparkleDelay, function () {
-            music.play(music.createSoundEffect(
+    ), music.PlaybackMode.InBackground)
+    timer.after(_num_sparkleDelay, function () {
+        music.play(music.createSoundEffect(
             WaveShape.Triangle,
-            2470,
-            2470,
-            152,
-            152,
+            2069,
+            2069,
+            175,
+            175,
             _num_sparkleDelay,
             SoundExpressionEffect.None,
             InterpolationCurve.Logarithmic
-            ), music.PlaybackMode.InBackground)
-            timer.after(_num_sparkleDelay, function () {
-                music.play(music.createSoundEffect(
+        ), music.PlaybackMode.InBackground)
+        timer.after(_num_sparkleDelay, function () {
+            music.play(music.createSoundEffect(
                 WaveShape.Triangle,
-                2069,
-                2069,
-                103,
-                103,
+                2470,
+                2470,
+                152,
+                152,
                 _num_sparkleDelay,
                 SoundExpressionEffect.None,
                 InterpolationCurve.Logarithmic
-                ), music.PlaybackMode.InBackground)
-                timer.after(_num_sparkleDelay, function () {
-                    music.play(music.createSoundEffect(
+            ), music.PlaybackMode.InBackground)
+            timer.after(_num_sparkleDelay, function () {
+                music.play(music.createSoundEffect(
                     WaveShape.Triangle,
-                    2470,
-                    2470,
-                    85,
-                    85,
+                    2069,
+                    2069,
+                    103,
+                    103,
                     _num_sparkleDelay,
                     SoundExpressionEffect.None,
                     InterpolationCurve.Logarithmic
-                    ), music.PlaybackMode.InBackground)
-                    timer.after(_num_sparkleDelay, function () {
-                        music.play(music.createSoundEffect(
+                ), music.PlaybackMode.InBackground)
+                timer.after(_num_sparkleDelay, function () {
+                    music.play(music.createSoundEffect(
                         WaveShape.Triangle,
-                        2069,
-                        2069,
-                        63,
-                        63,
+                        2470,
+                        2470,
+                        85,
+                        85,
                         _num_sparkleDelay,
                         SoundExpressionEffect.None,
                         InterpolationCurve.Logarithmic
-                        ), music.PlaybackMode.InBackground)
-                        timer.after(_num_sparkleDelay, function () {
-                            music.play(music.createSoundEffect(
+                    ), music.PlaybackMode.InBackground)
+                    timer.after(_num_sparkleDelay, function () {
+                        music.play(music.createSoundEffect(
                             WaveShape.Triangle,
-                            2470,
-                            2470,
-                            40,
-                            40,
+                            2069,
+                            2069,
+                            63,
+                            63,
                             _num_sparkleDelay,
                             SoundExpressionEffect.None,
                             InterpolationCurve.Logarithmic
-                            ), music.PlaybackMode.InBackground)
-                            timer.after(_num_sparkleDelay, function () {
-                                music.play(music.createSoundEffect(
+                        ), music.PlaybackMode.InBackground)
+                        timer.after(_num_sparkleDelay, function () {
+                            music.play(music.createSoundEffect(
                                 WaveShape.Triangle,
-                                2069,
-                                2069,
-                                32,
-                                32,
+                                2470,
+                                2470,
+                                40,
+                                40,
                                 _num_sparkleDelay,
                                 SoundExpressionEffect.None,
                                 InterpolationCurve.Logarithmic
-                                ), music.PlaybackMode.InBackground)
-                                timer.after(_num_sparkleDelay, function () {
-                                    music.play(music.createSoundEffect(
+                            ), music.PlaybackMode.InBackground)
+                            timer.after(_num_sparkleDelay, function () {
+                                music.play(music.createSoundEffect(
                                     WaveShape.Triangle,
-                                    2470,
-                                    2470,
-                                    18,
-                                    18,
+                                    2069,
+                                    2069,
+                                    32,
+                                    32,
                                     _num_sparkleDelay,
                                     SoundExpressionEffect.None,
                                     InterpolationCurve.Logarithmic
-                                    ), music.PlaybackMode.InBackground)
-                                    timer.after(_num_sparkleDelay, function () {
-                                        music.play(music.createSoundEffect(
+                                ), music.PlaybackMode.InBackground)
+                                timer.after(_num_sparkleDelay, function () {
+                                    music.play(music.createSoundEffect(
                                         WaveShape.Triangle,
-                                        2069,
-                                        2069,
-                                        9,
-                                        9,
+                                        2470,
+                                        2470,
+                                        18,
+                                        18,
                                         _num_sparkleDelay,
                                         SoundExpressionEffect.None,
                                         InterpolationCurve.Logarithmic
-                                        ), music.PlaybackMode.InBackground)
-                                        timer.after(_num_sparkleDelay, function () {
-                                            music.play(music.createSoundEffect(
+                                    ), music.PlaybackMode.InBackground)
+                                    timer.after(_num_sparkleDelay, function () {
+                                        music.play(music.createSoundEffect(
                                             WaveShape.Triangle,
-                                            2470,
-                                            2470,
-                                            5,
-                                            5,
+                                            2069,
+                                            2069,
+                                            9,
+                                            9,
                                             _num_sparkleDelay,
                                             SoundExpressionEffect.None,
                                             InterpolationCurve.Logarithmic
+                                        ), music.PlaybackMode.InBackground)
+                                        timer.after(_num_sparkleDelay, function () {
+                                            music.play(music.createSoundEffect(
+                                                WaveShape.Triangle,
+                                                2470,
+                                                2470,
+                                                5,
+                                                5,
+                                                _num_sparkleDelay,
+                                                SoundExpressionEffect.None,
+                                                InterpolationCurve.Logarithmic
                                             ), music.PlaybackMode.InBackground)
                                         })
                                     })
@@ -3295,7 +2876,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.Bullet, function (sprite, otherS
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile140`, function (sprite, location) {
     flipSwitch(assets.tile`myTile141`, assets.tile`myTile137`, assets.tile`myTile138`, assets.tile`myTile139`, location.column, location.row)
 })
-function destroyTreesOutOfView () {
+function destroyTreesOutOfView() {
     for (let value of sprites.allOfKind(SpriteKind.Tree)) {
         if (!(isInView(value.x, value.y, sprite_cameraControl))) {
             sprites.destroy(value)
@@ -3322,24 +2903,24 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile90`, function (sprite, 
         })
     })
 })
-function playWizardNoise () {
+function playWizardNoise() {
     music.play(music.createSoundEffect(
-    WaveShape.Square,
-    400,
-    randint(500, 650),
-    80,
-    0,
-    100,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Linear
+        WaveShape.Square,
+        400,
+        randint(500, 650),
+        80,
+        0,
+        100,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Linear
     ), music.PlaybackMode.UntilDone)
 }
-function wizardDialog (_wizard: Sprite) {
+function wizardDialog(_wizard: Sprite) {
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
         animation.runImageAnimation(
-        _wizard,
-        [img`
+            _wizard,
+            [img`
             . . . . . . . . c c c c c . . . 
             . . . . . . c c b b b b b c . . 
             . . . . c c b b b b b c b c . . 
@@ -3356,7 +2937,7 @@ function wizardDialog (_wizard: Sprite) {
             . . . c c c b b b b c c c . . . 
             . . . . . c c c c c c . . . . . 
             . . . . . . . . . . . . . . . . 
-            `,img`
+            `, img`
             . . . . . . . . c c c c . . . . 
             . . . . . . c c b b b b c . . . 
             . . . . . c b b b b c c b c . . 
@@ -3374,8 +2955,8 @@ function wizardDialog (_wizard: Sprite) {
             . . . . . c c c c c c . . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
         playWizardNoise()
         if (num_lastDialogNPC1 == 0) {
@@ -3404,8 +2985,8 @@ function wizardDialog (_wizard: Sprite) {
             timer.after(_num_dialogLength, function () {
                 bool_isNPCTalking = true
                 animation.runImageAnimation(
-                _wizard,
-                [img`
+                    _wizard,
+                    [img`
                     . . . . . . . . c c c c c . . . 
                     . . . . . . c c b b b b b c . . 
                     . . . . c c b b b b b c b c . . 
@@ -3422,7 +3003,7 @@ function wizardDialog (_wizard: Sprite) {
                     . . . c c c b b b b c c c . . . 
                     . . . . . c c c c c c . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . c c c c . . . . 
                     . . . . . . c c b b b b c . . . 
                     . . . . . c b b b b c c b c . . 
@@ -3440,8 +3021,8 @@ function wizardDialog (_wizard: Sprite) {
                     . . . . . c c c c c c . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                350,
-                true
+                    350,
+                    true
                 )
                 _num_dialogLength = 2500
                 playWizardNoise()
@@ -3449,8 +3030,8 @@ function wizardDialog (_wizard: Sprite) {
                 timer.after(_num_dialogLength, function () {
                     bool_isNPCTalking = true
                     animation.runImageAnimation(
-                    _wizard,
-                    [img`
+                        _wizard,
+                        [img`
                         . . . . . . . . c c c c c . . . 
                         . . . . . . c c b b b b b c . . 
                         . . . . c c b b b b b c b c . . 
@@ -3467,7 +3048,7 @@ function wizardDialog (_wizard: Sprite) {
                         . . . c c c b b b b c c c . . . 
                         . . . . . c c c c c c . . . . . 
                         . . . . . . . . . . . . . . . . 
-                        `,img`
+                        `, img`
                         . . . . . . . . c c c c . . . . 
                         . . . . . . c c b b b b c . . . 
                         . . . . . c b b b b c c b c . . 
@@ -3485,8 +3066,8 @@ function wizardDialog (_wizard: Sprite) {
                         . . . . . c c c c c c . . . . . 
                         . . . . . . . . . . . . . . . . 
                         `],
-                    350,
-                    true
+                        350,
+                        true
                     )
                     _num_dialogLength = 1000
                     playWizardNoise()
@@ -3515,8 +3096,8 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             `, SpriteKind.Player)
                         animation.runImageAnimation(
-                        sprite_questIcon,
-                        [img`
+                            sprite_questIcon,
+                            [img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3533,7 +3114,7 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
-                            `,img`
+                            `, img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3550,7 +3131,7 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
-                            `,img`
+                            `, img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3567,7 +3148,7 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
-                            `,img`
+                            `, img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3584,7 +3165,7 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
-                            `,img`
+                            `, img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3601,7 +3182,7 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
-                            `,img`
+                            `, img`
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
@@ -3619,16 +3200,16 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . . . . . . . . . . . . 
                             . . . . . . . . . . . . . . . . 
                             `],
-                        100,
-                        true
+                            100,
+                            true
                         )
                         tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(29, 52))
                         bool_isPlayerFrozen = false
                         controller.moveSprite(sprite_player, 75, 75)
                         bool_isNPCTalking = false
                         animation.runImageAnimation(
-                        _wizard,
-                        [img`
+                            _wizard,
+                            [img`
                             . . . . . . . . c c c c . . . . 
                             . . . . . . c c b b b b c . . . 
                             . . . . . c b b b b c c b c . . 
@@ -3646,8 +3227,8 @@ function wizardDialog (_wizard: Sprite) {
                             . . . . . c c c c c c . . . . . 
                             . . . . . . . . . . . . . . . . 
                             `],
-                        200,
-                        false
+                            200,
+                            false
                         )
                     })
                 })
@@ -3659,8 +3240,8 @@ function wizardDialog (_wizard: Sprite) {
         timer.after(_num_dialogLength, function () {
             bool_isNPCTalking = false
             animation.runImageAnimation(
-            _wizard,
-            [img`
+                _wizard,
+                [img`
                 . . . . . . . . c c c c . . . . 
                 . . . . . . c c b b b b c . . . 
                 . . . . . c b b b b c c b c . . 
@@ -3678,623 +3259,14 @@ function wizardDialog (_wizard: Sprite) {
                 . . . . . c c c c c c . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            200,
-            false
-            )
-        })
-    }
-}
-function pickupMoney (_pickup: Sprite, _player: Sprite) {
-    _pickup.setFlag(SpriteFlag.Ghost, true)
-    _pickup.lifespan = 1300
-    _pickup.z = 300
-    num_currentMoneyAdd += sprites.readDataNumber(_pickup, "data_value")
-    text_moneyAdd = textsprite.create(convertToText(sprites.readDataNumber(_pickup, "data_value")), 0, 13)
-    text_moneyAdd.setIcon(img`
-        . c c c . 
-        c c d c c 
-        c d d d c 
-        c c d c c 
-        . c c c . 
-        `)
-    text_moneyAdd.setOutline(1, 12)
-    text_moneyAdd.setFlag(SpriteFlag.Ghost, true)
-    text_moneyAdd.setFlag(SpriteFlag.RelativeToCamera, true)
-    text_moneyAdd.setPosition(16, 30)
-    if (sprites.readDataNumber(_pickup, "data_value") == num_moneyValue3) {
-        text_moneyAdd.setIcon(img`
-            . c c d c c . 
-            c c d d d c c 
-            d d d d d d d 
-            c d d d d d c 
-            c c d d d c c 
-            c d d d d d c 
-            c d d c d d c 
-            `)
-        text_moneyAdd.setVelocity(0, randint(5, 8))
-        text_moneyAdd.lifespan = 2000
-        text_moneyAdd.z = 510
-        _pickup.y += -5
-        music.play(music.createSoundEffect(WaveShape.Triangle, 2000, 2000, 46, 60, 50, SoundExpressionEffect.None, InterpolationCurve.Logarithmic), music.PlaybackMode.InBackground)
-        timer.after(50, function () {
-            music.play(music.createSoundEffect(
-            WaveShape.Triangle,
-            2600,
-            2600,
-            206,
-            0,
-            50,
-            SoundExpressionEffect.None,
-            InterpolationCurve.Logarithmic
-            ), music.PlaybackMode.InBackground)
-            timer.after(50, function () {
-                music.play(music.createSoundEffect(
-                WaveShape.Triangle,
-                3000,
-                3000,
-                206,
-                0,
-                300,
-                SoundExpressionEffect.None,
-                InterpolationCurve.Logarithmic
-                ), music.PlaybackMode.InBackground)
-                timer.after(300, function () {
-                    _pickup.lifespan = 1300
-                    _pickup.vy = -15
-                    animation.runImageAnimation(
-                    _pickup,
-                    [img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . c c c d c c c . . . 
-                        . . . c d d d d d c . . . 
-                        . . . c c d d d c c . . . 
-                        . . . . c d c d c . . . . 
-                        . . . . c c c c c . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . c d c . . . . . 
-                        . . c c c b d b c c c . . 
-                        . . c d d d d d d d c . . 
-                        . . . c d d d d d c . . . 
-                        . . . . c d d d c . . . . 
-                        . . . c d d b d d c . . . 
-                        . . . c d b c b d c . . . 
-                        . . . c c c . c c c . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . c d c . . . . . 
-                        . . c c c b d b c c c . . 
-                        . . c d d d d d d d c . . 
-                        . . . c d d d d d c . . . 
-                        . . . . c d d d c . . . . 
-                        . . . c d d b d d c . . . 
-                        . . . c d b c b d c . . . 
-                        . . . c c c . c c c . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . c d c . . . . . 
-                        . . c c c b d b c c c . . 
-                        . . c d d d d d d d c . . 
-                        . . . c d d d d d c . . . 
-                        . . . . c d d d c . . . . 
-                        . . . c d d b c d c . . . 
-                        . . . c d b c b c c . . . 
-                        . . . c c c . c c c . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . c d c . . . . . 
-                        . . c c c c d c c c c . . 
-                        . . c d d d d d d d c . . 
-                        . . . c c c d c c c . . . 
-                        . . . . c d c c d c . . . 
-                        . . . . c d c d d d . . . 
-                        . . . c d c . c d c . . . 
-                        . . . c c . . . c c . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . . . . c . . . . . . 
-                        . . . c c c d c . . . . . 
-                        . . c c d c d c c c c . . 
-                        . . c d c d d d d d c . . 
-                        . . . c c c d c c c . . . 
-                        . . . . c d c c d c . . . 
-                        . . . . c d c d d d . . . 
-                        . . . c d c c c d c . . . 
-                        . . . c c . . . c c . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . c c c c c . . . . . 
-                        . . c c d c d c . . . . . 
-                        . . c d d d c c . . . . . 
-                        . . c c d c d c c c c . . 
-                        . . c d c d d d c d c . . 
-                        . . c c c c d c d c c . . 
-                        . . . . . c c d d d c . . 
-                        . . . . . c d c d c c . . 
-                        . . . . . c c c c c . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . c c c . . . . . . . 
-                        . . c c d c c c . . . . . 
-                        . . c d d d c c . . . . . 
-                        . . c c d c d c c c . . . 
-                        . . . c c d d d d c . . . 
-                        . . . c c c d c c c . . . 
-                        . . . c d c d c d c . . . 
-                        . . . c c c c c c c . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . c c c . . . . . . . 
-                        . . c c d c c c c c . . . 
-                        . . c d d d c c d c . . . 
-                        . . c c d c d c c c . . . 
-                        . . . c c d d d d c . . . 
-                        . . c c d c d c c c . . . 
-                        . . c d d d c c . . . . . 
-                        . . c c d c c c . . . . . 
-                        . . . c c c . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . c c c . c c c . . . 
-                        . . c c d c c c d c c . . 
-                        . . c d d d c d d d c . . 
-                        . . c c d c d c d c c . . 
-                        . . . c c d d d c c . . . 
-                        . . c c d c d c c . . . . 
-                        . . c d d d c c . . . . . 
-                        . . c c d c c . . . . . . 
-                        . . . c c c . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . c c c . . . 
-                        . . . c c c c c d c c . . 
-                        . . . c d c c d d d c . . 
-                        . . . c c c d c d c c . . 
-                        . . . . c d d d c c . . . 
-                        . . . . c c d c c . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . c c c c c c c . . . 
-                        . . . c d c c c d c . . . 
-                        . . . c c c d c c c . . . 
-                        . . . . c d d d c c . . . 
-                        . . . . c c d c c . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . c c c . . . 
-                        . . . . . . . c d c . . . 
-                        . . . . . c c c c c . . . 
-                        . . . . . c d c . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . c d c . . . . . 
-                        . . . . . c c c . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `,img`
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        . . . . . . . . . . . . . 
-                        `],
-                    75,
-                    false
-                    )
-                    playSparkle()
-                })
-            })
-        })
-    } else if (sprites.readDataNumber(_pickup, "data_value") == num_moneyValue2) {
-        text_moneyAdd.setIcon(img`
-            . . c c c . . 
-            . . c d c . . 
-            c c c d c c c 
-            c d d d d d c 
-            c c c d c c c 
-            . . c d c . . 
-            . . c c c . . 
-            `)
-        text_moneyAdd.setMaxFontHeight(5)
-        text_moneyAdd.z = 505
-        text_moneyAdd.setVelocity(0, randint(9, 11))
-        text_moneyAdd.lifespan = 750
-        music.play(music.createSoundEffect(
-        WaveShape.Triangle,
-        2060,
-        2060,
-        46,
-        60,
-        50,
-        SoundExpressionEffect.None,
-        InterpolationCurve.Logarithmic
-        ), music.PlaybackMode.InBackground)
-        _pickup.y += -5
-        timer.after(50, function () {
-            music.play(music.createSoundEffect(
-            WaveShape.Triangle,
-            2470,
-            2470,
-            206,
-            0,
-            50,
-            SoundExpressionEffect.None,
-            InterpolationCurve.Logarithmic
-            ), music.PlaybackMode.InBackground)
-            timer.after(50, function () {
-                _pickup.lifespan = 400
-                animation.runImageAnimation(
-                _pickup,
-                [img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c c c . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c d c . . . . 
-                    . c c c c d c c c c . 
-                    . c d d d d d d d c . 
-                    . c c c c d c c c c . 
-                    . . . . c d c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c c c . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c d c . . . . 
-                    . c c c c d c c c c . 
-                    . c d d d d d d d c . 
-                    . c c c c d c c c c . 
-                    . . . . c d c c d c . 
-                    . . . . c d c c c c . 
-                    . . . . c c c . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c d c . . . . 
-                    . c c c c d c c c c . 
-                    . c d d d d d c c c . 
-                    . c c c c d c c d c c 
-                    . c d c c d c d d d c 
-                    . c c c c d c c d c c 
-                    . . . . c c c c c c . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . c c c d c c c . . 
-                    . c c c d d d c c c . 
-                    c c d c c d c c d c c 
-                    c d d d c d c d d d c 
-                    c c d c c c c c d c c 
-                    . c c c . . . c c c . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . c c c d c c c . . 
-                    . c c c d d d d c . . 
-                    c c d c c d c c c c . 
-                    c d d d c d c c d c . 
-                    c c d c c c c c c c . 
-                    . c c c . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . c c d c c . . . 
-                    . . . c d d d c . . . 
-                    . c c c c d c c c c . 
-                    . c d c c c c c d c . 
-                    . c c c . . . c c c . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . c c d c c . . . 
-                    . . . c d d d c . . . 
-                    . c c c c d c c . . . 
-                    . c d c c c c . . . . 
-                    . c c c . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c c c . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . c c c . . . . 
-                    . . . . c d c . . . . 
-                    . . . . c c c . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `,img`
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    . . . . . . . . . . . 
-                    `],
-                50,
-                false
-                )
-                music.play(music.createSoundEffect(
-                WaveShape.Triangle,
-                2600,
-                2600,
-                206,
-                0,
                 200,
-                SoundExpressionEffect.None,
-                InterpolationCurve.Logarithmic
-                ), music.PlaybackMode.InBackground)
-            })
-        })
-    } else if (sprites.readDataNumber(_pickup, "data_value") == num_moneyValue1) {
-        text_moneyAdd.setMaxFontHeight(5)
-        text_moneyAdd.setVelocity(0, randint(15, 20))
-        text_moneyAdd.lifespan = 500
-        text_moneyAdd.z = 500
-        music.play(music.createSoundEffect(
-        WaveShape.Triangle,
-        2000,
-        2000,
-        46,
-        60,
-        100,
-        SoundExpressionEffect.None,
-        InterpolationCurve.Logarithmic
-        ), music.PlaybackMode.InBackground)
-        _pickup.y += -5
-        timer.after(100, function () {
-            _pickup.lifespan = 400
-            animation.runImageAnimation(
-            _pickup,
-            [img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . c c c d c c c . . 
-                . . c d d d d d c . . 
-                . . c c c d c c c . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . c c c d c c c . . 
-                . . c d d d d d c . . 
-                . . c c c d c c c . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . c c c d c c c . . 
-                . . c d d d d d c . . 
-                . . c c c d c c c . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . c c d c c . . . 
-                . . . c d d d c . . . 
-                . . . c c d c c . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . c c d c c . . . 
-                . . . c d d d c . . . 
-                . . . c c d c c . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . c c c . . . . 
-                . . . . c d c . . . . 
-                . . . . c c c . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `,img`
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                . . . . . . . . . . . 
-                `],
-            50,
-            false
+                false
             )
-            music.play(music.createSoundEffect(
-            WaveShape.Triangle,
-            2470,
-            2470,
-            206,
-            0,
-            200,
-            SoundExpressionEffect.None,
-            InterpolationCurve.Logarithmic
-            ), music.PlaybackMode.InBackground)
         })
     }
 }
-function moveTo (_sprite: Sprite, _origin: Sprite, _speed: number) {
+
+function moveTo(_sprite: Sprite, _origin: Sprite, _speed: number) {
     _num_knockbackX = _origin.x - _sprite.x
     _num_knockbackY = _origin.y - _sprite.y
     if (_num_knockbackY == 0 && _num_knockbackX == 0) {
@@ -4305,7 +3277,7 @@ function moveTo (_sprite: Sprite, _origin: Sprite, _speed: number) {
     _sprite.vx = _speed * (_num_knockbackX / _num_knockbackZ)
     _sprite.vy = _speed * (_num_knockbackY / _num_knockbackZ)
 }
-function enemyRoomTransition () {
+function enemyRoomTransition() {
     _bool_isEnemyRoom = true
     controller.moveSprite(sprite_player, 0, 0)
     sprite_player.setVelocity(0, 0)
@@ -4321,7 +3293,7 @@ function enemyRoomTransition () {
         wakeUpRobots()
     })
 }
-function createDungeonMusicInView () {
+function createDungeonMusicInView() {
     for (let value of tiles.getTilesByType(assets.tile`Empty2`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             sprite_dungeonMusic = sprites.create(img`
@@ -4346,7 +3318,7 @@ function createDungeonMusicInView () {
         }
     }
 }
-function createHUD () {
+function createHUD() {
     text_timer = textsprite.create("00", 0, 13)
     text_timer.setIcon(img`
         . c c c c c . 
@@ -4380,13 +3352,13 @@ function createHUD () {
     text_money.setPosition(10, 20)
     text_money.z = 500
     num_currentHealth = 3
-    sprite_hudHealth = sprites.create(assets.image`Hearts2`, SpriteKind.userInterface)
+    sprite_hudHealth = sprites.create(assets.image`Health3`, SpriteKind.userInterface)
     sprite_hudHealth.setFlag(SpriteFlag.Ghost, true)
     sprite_hudHealth.setFlag(SpriteFlag.RelativeToCamera, true)
     sprite_hudHealth.z = 500
     sprite_hudHealth.setPosition(24, 9)
 }
-function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: number, _dialog: string) {
+function playCutsceneSaveNPC(_npc: Sprite, _vx: number, _vy: number, _length: number, _dialog: string) {
     controller.moveSprite(sprite_player, 0, 0)
     bool_isPlayerFrozen = true
     sprite_player.setVelocity(0, 0)
@@ -4394,8 +3366,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
     playCatNoise()
     if (sprites.readDataString(_npc, "data_type") == "cat1") {
         animation.runImageAnimation(
-        _npc,
-        [img`
+            _npc,
+            [img`
             . . . . . . . . . . . . . . . . 
             . c c c c . . c c c c . . . . . 
             . c d d c c c c d d c . . . . . 
@@ -4413,13 +3385,13 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
             . . . . . . . c c c c c . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
     } else if (sprites.readDataString(_npc, "data_type") == "cat2") {
         animation.runImageAnimation(
-        _npc,
-        [img`
+            _npc,
+            [img`
             . . . . . . . . . . . . . . . . 
             . c c c c . . c c c c . . . . . 
             . c d d c c c c d d c . . . . . 
@@ -4437,13 +3409,13 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
             . . . . . . . c c c c c . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
     } else if (sprites.readDataString(_npc, "data_type") == "cat3") {
         animation.runImageAnimation(
-        _npc,
-        [img`
+            _npc,
+            [img`
             . . . . . . . . . . . . . . . . 
             . c c c c . . c c c c . . . . . 
             . c d d c c c c d d c . . . . . 
@@ -4461,8 +3433,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
             . . . . . . . c c c c c . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
     }
     timer.after(500, function () {
@@ -4471,8 +3443,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
         _npc.sayText(_dialog)
         if (sprites.readDataString(_npc, "data_type") == "cat1") {
             animation.runImageAnimation(
-            _npc,
-            [img`
+                _npc,
+                [img`
                 . . . . . . . c c c . . . . . . 
                 . . . . . . . c d c . . . . . . 
                 . . . . . c c c d c c . . . . . 
@@ -4489,7 +3461,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . c d c . . . c d c . . . . 
                 . . . c c c . . . c c c . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . c c c . . . . . . . 
                 . . . . . . c d c c . . . . . . 
                 . . . . . c c c d c c . . . . . 
@@ -4506,7 +3478,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . . c c c c c c c c . . . . 
                 . . . . c c c . . c c c . . . . 
                 . . . . c d c . . c d c . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . c c c . . . . . . 
                 . . . . . . . c d c . . . . . . 
@@ -4523,7 +3495,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . c c d b b b d d c c . . . 
                 . . . . c c b c c c b c . . . . 
                 . . . . . c c c . c c c . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . c c c . . . . . 
                 . . . . . . . c c d c . . . . . 
@@ -4541,13 +3513,13 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            100,
-            true
+                100,
+                true
             )
         } else if (sprites.readDataString(_npc, "data_type") == "cat2") {
             animation.runImageAnimation(
-            _npc,
-            [img`
+                _npc,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 c c c . . . . c c c . . . . . . 
@@ -4564,7 +3536,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 c c c . c c c . . . . . c c d c 
                 . . . . . . . . . . . . . c c c 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -4581,7 +3553,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 c c b c c c b c c c c d c c . . 
                 c d c c c d c c . . c c c . . . 
                 c c c . c c c . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -4598,7 +3570,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . c c c c c c c c c c c d c . . 
                 . . . c d c c c d c c d c c . . 
                 . . . c c c . c c c c c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 c c c . . . . c c c . . . . . . 
@@ -4616,13 +3588,13 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . . . . . . . . . . c c d c 
                 . . . . . . . . . . . . . c c c 
                 `],
-            100,
-            true
+                100,
+                true
             )
         } else if (sprites.readDataString(_npc, "data_type") == "cat3") {
             animation.runImageAnimation(
-            _npc,
-            [img`
+                _npc,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 c c c . . . . c c c . . . . . . 
@@ -4639,7 +3611,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 c c c . c c c . . . . . c c d c 
                 . . . . . . . . . . . . . c c c 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -4656,7 +3628,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 c c d c c c d c c c c d c c . . 
                 c d c c c d c c . . c c c . . . 
                 c c c . c c c . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -4673,7 +3645,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . c c c c c c c c c c c d c . . 
                 . . . c d c c c d c c d c c . . 
                 . . . c c c . c c c c c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 c c c . . . . c c c . . . . . . 
@@ -4691,8 +3663,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                 . . . . . . . . . . . . c c d c 
                 . . . . . . . . . . . . . c c c 
                 `],
-            100,
-            true
+                100,
+                true
             )
         }
         _npc.setVelocity(_vx, _vy)
@@ -4721,8 +3693,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Player)
                 animation.runImageAnimation(
-                sprite_questIcon,
-                [img`
+                    sprite_questIcon,
+                    [img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4739,7 +3711,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4756,7 +3728,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4773,7 +3745,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4790,7 +3762,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4807,7 +3779,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4825,8 +3797,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                100,
-                true
+                    100,
+                    true
                 )
                 tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(42, 36))
                 sprite_questIcon = sprites.create(img`
@@ -4848,8 +3820,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Player)
                 animation.runImageAnimation(
-                sprite_questIcon,
-                [img`
+                    sprite_questIcon,
+                    [img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4866,7 +3838,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4883,7 +3855,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4900,7 +3872,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4917,7 +3889,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4934,7 +3906,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -4952,8 +3924,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                100,
-                true
+                    100,
+                    true
                 )
                 tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(32, 36))
                 sprite_questIcon = sprites.create(img`
@@ -4975,8 +3947,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Player)
                 animation.runImageAnimation(
-                sprite_questIcon,
-                [img`
+                    sprite_questIcon,
+                    [img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -4993,7 +3965,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -5010,7 +3982,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -5027,7 +3999,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5044,7 +4016,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5061,7 +4033,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . c c . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5079,8 +4051,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                100,
-                true
+                    100,
+                    true
                 )
                 tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(25, 38))
                 sprite_questIcon = sprites.create(img`
@@ -5102,8 +4074,8 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     `, SpriteKind.Player)
                 animation.runImageAnimation(
-                sprite_questIcon,
-                [img`
+                    sprite_questIcon,
+                    [img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -5120,7 +4092,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -5137,7 +4109,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . c c c c . . . . . . 
                     . . . . . . c d d c . . . . . . 
@@ -5154,7 +4126,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5171,7 +4143,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5188,7 +4160,7 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . c c . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
-                    `,img`
+                    `, img`
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
@@ -5206,32 +4178,32 @@ function playCutsceneSaveNPC (_npc: Sprite, _vx: number, _vy: number, _length: n
                     . . . . . . . . . . . . . . . . 
                     . . . . . . . . . . . . . . . . 
                     `],
-                100,
-                true
+                    100,
+                    true
                 )
                 tiles.placeOnTile(sprite_questIcon, tiles.getTileLocation(25, 46))
             }
         })
     })
 }
-function playBatDie () {
+function playBatDie() {
     music.play(music.createSoundEffect(
-    WaveShape.Square,
-    randint(3000, 3500),
-    0,
-    80,
-    0,
-    300,
-    SoundExpressionEffect.Warble,
-    InterpolationCurve.Linear
+        WaveShape.Square,
+        randint(3000, 3500),
+        0,
+        80,
+        0,
+        300,
+        SoundExpressionEffect.Warble,
+        InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
-function cat2Dialog (_cat2: Sprite) {
+function cat2Dialog(_cat2: Sprite) {
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
         animation.runImageAnimation(
-        _cat2,
-        [img`
+            _cat2,
+            [img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . c c c c . . c c c c . . . . . 
@@ -5248,7 +4220,7 @@ function cat2Dialog (_cat2: Sprite) {
             . . . c b c c c c c d c . . . . 
             . . . c c c . . . c c c . . . . 
             . . . . . . . . . . . . . . . . 
-            `,img`
+            `, img`
             . . . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . . . 
             . c c c c . . c c c c . . . . . 
@@ -5266,8 +4238,8 @@ function cat2Dialog (_cat2: Sprite) {
             . . . . . . c c c . c c . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
         playCatNoise()
         if (num_lastDialogNPC3 == 0) {
@@ -5286,8 +4258,8 @@ function cat2Dialog (_cat2: Sprite) {
         timer.after(_num_dialogLength, function () {
             bool_isNPCTalking = false
             animation.runImageAnimation(
-            _cat2,
-            [img`
+                _cat2,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . c c c . . . . c c c . . . . . 
                 . c d d c . . c d d c . . . . . 
@@ -5305,8 +4277,8 @@ function cat2Dialog (_cat2: Sprite) {
                 . . . c c . c c . . c c . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            200,
-            false
+                200,
+                false
             )
         })
     }
@@ -5329,7 +4301,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile57`, function (sprite, 
         })
     })
 })
-function createBullet (_origin: Sprite, _destination: Sprite) {
+function createBullet(_origin: Sprite, _destination: Sprite) {
     sprite_bullet = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5354,7 +4326,7 @@ function createBullet (_origin: Sprite, _destination: Sprite) {
     sprite_bullet.setFlag(SpriteFlag.GhostThroughWalls, true)
     moveTo(sprite_bullet, _destination, 75)
 }
-function knockback (_sprite: Sprite, _origin: Sprite, _speed: number, _time: number) {
+function knockback(_sprite: Sprite, _origin: Sprite, _speed: number, _time: number) {
     _sprite.setFlag(SpriteFlag.GhostThroughSprites, true)
     _num_knockbackX = _sprite.x - _origin.x
     _num_knockbackY = _sprite.y - _origin.y
@@ -5370,7 +4342,7 @@ function knockback (_sprite: Sprite, _origin: Sprite, _speed: number, _time: num
         _sprite.setFlag(SpriteFlag.GhostThroughSprites, false)
     })
 }
-function updateEnemies () {
+function updateEnemies() {
     for (let value of sprites.allOfKind(SpriteKind.Enemy)) {
         if (!(isInView(value.x, value.y, sprite_cameraControl))) {
             sprites.destroy(value)
@@ -5419,15 +4391,15 @@ function updateEnemies () {
         }
     }
 }
-function playerAttack () {
+function playerAttack() {
     if (bool_isPlayerFrozen == false) {
         Bool_isAttacking = true
         bool_isPlayerFrozen = true
         if (num_lastFacing == 1) {
             sprite_sword.setPosition(sprite_player.x, sprite_player.y - 10)
             animation.runImageAnimation(
-            sprite_sword,
-            [img`
+                sprite_sword,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5444,7 +4416,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . c c 1 1 1 1 c . . . . . . 
                 . . c 1 1 1 1 c 1 c . . . . . . 
                 . c 1 1 1 c c c 1 c . . . . . . 
@@ -5461,7 +4433,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . c c 1 1 1 1 1 1 c c . . . 
                 . . c 1 1 1 1 1 1 1 1 1 1 c . . 
                 . c 1 1 c c c c c c 1 1 1 1 c . 
@@ -5478,7 +4450,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . c . c c c c c . . . . 
                 . . . . c 1 c 1 1 1 1 1 c c . . 
                 . . c . . c . c c c c 1 1 1 c . 
@@ -5495,7 +4467,7 @@ function playerAttack () {
                 . . . . . . . . . . . c c . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . c . . . 
                 . . . . . . . . . . . c 1 c c . 
@@ -5513,14 +4485,14 @@ function playerAttack () {
                 . . . . . . . . . . . c c . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            40,
-            false
+                40,
+                false
             )
         } else if (num_lastFacing == 2) {
             sprite_sword.setPosition(sprite_player.x + 10, sprite_player.y)
             animation.runImageAnimation(
-            sprite_sword,
-            [img`
+                sprite_sword,
+                [img`
                 . . . . . . c 1 1 c c . . . . . 
                 . . . . . . . c c 1 1 c c . . . 
                 . . . . c c . . c c 1 1 c . . . 
@@ -5537,7 +4509,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . c 1 1 c c . . . . 
                 . . . . . . . . c c 1 1 c c . . 
                 . . . . . . . . . . c 1 1 1 c . 
@@ -5554,7 +4526,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . c 1 c . . . 
                 . . . . . . . . . . . c . c . . 
                 . . . . . . . . . . . . c 1 c . 
@@ -5571,7 +4543,7 @@ function playerAttack () {
                 . . . . c b c c 1 1 c c 1 1 c . 
                 . . . . c c . . c c 1 1 c c . . 
                 . . . . . . . . . . c c . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . c . . . 
                 . . . . . . . . . . . c 1 c . . 
@@ -5588,7 +4560,7 @@ function playerAttack () {
                 . . . c b 1 1 c c . c c 1 1 c . 
                 . . . c b c c 1 1 c c 1 1 c . . 
                 . . . c c . . c c 1 1 c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5606,14 +4578,14 @@ function playerAttack () {
                 . . c b c c 1 1 c c 1 1 1 c . . 
                 . . c c . . c c 1 1 1 1 c . . . 
                 `],
-            40,
-            false
+                40,
+                false
             )
         } else if (num_lastFacing == 3) {
             sprite_sword.setPosition(sprite_player.x - 10, sprite_player.y)
             animation.runImageAnimation(
-            sprite_sword,
-            [img`
+                sprite_sword,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5630,7 +4602,7 @@ function playerAttack () {
                 . . . c 1 1 c c . . c c . . . . 
                 . . . c c 1 1 c c . . . . . . . 
                 . . . . . c c 1 1 c . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5647,7 +4619,7 @@ function playerAttack () {
                 . c 1 1 1 c . . . . . . . . . . 
                 . . c c 1 1 c c . . . . . . . . 
                 . . . . c c 1 1 c . . . . . . . 
-                `,img`
+                `, img`
                 . . . . c c . . . . . . . . . . 
                 . . c c 1 1 c c . . c c . . . . 
                 . c 1 1 c c 1 1 c c b c . . . . 
@@ -5664,7 +4636,7 @@ function playerAttack () {
                 . c 1 c . . . . . . . . . . . . 
                 . . c . c . . . . . . . . . . . 
                 . . . c 1 c . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . c c 1 1 c c . . c c . . . 
                 . . c 1 1 c c 1 1 c c b c . . . 
                 . c 1 1 c c . c c 1 1 b c . . . 
@@ -5681,7 +4653,7 @@ function playerAttack () {
                 . . c 1 c . . . . . . . . . . . 
                 . . . c . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . c 1 1 1 1 c c . . c c . . 
                 . . c 1 1 1 c c 1 1 c c b c . . 
                 . . c 1 c c . . c c 1 1 b c . . 
@@ -5699,14 +4671,14 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            40,
-            false
+                40,
+                false
             )
         } else {
             sprite_sword.setPosition(sprite_player.x, sprite_player.y + 10)
             animation.runImageAnimation(
-            sprite_sword,
-            [img`
+                sprite_sword,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5723,7 +4695,7 @@ function playerAttack () {
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5740,7 +4712,7 @@ function playerAttack () {
                 . . . . . . c 1 c c c 1 1 1 c . 
                 . . . . . . c 1 c 1 1 1 1 c . . 
                 . . . . . . c 1 1 1 1 c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
@@ -5757,7 +4729,7 @@ function playerAttack () {
                 . c 1 1 1 1 c c c c c c 1 1 c . 
                 . . c 1 1 1 1 1 1 1 1 1 1 c . . 
                 . . . c c 1 1 1 1 1 1 c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . . c c . . . . . . . . . . . 
@@ -5774,7 +4746,7 @@ function playerAttack () {
                 . c 1 1 1 c c c c . c . . c . . 
                 . . c c 1 1 1 1 1 c 1 c . . . . 
                 . . . . c c c c c . c . . . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . c c . . . . . . . . . . . 
                 c c c b c . . . . . . . . . . . 
@@ -5792,20 +4764,20 @@ function playerAttack () {
                 . . . c . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            40,
-            false
+                40,
+                false
             )
         }
         controller.moveSprite(sprite_player, 0, 0)
         music.play(music.createSoundEffect(
-        WaveShape.Noise,
-        1188,
-        5000,
-        0,
-        40,
-        125,
-        SoundExpressionEffect.None,
-        InterpolationCurve.Curve
+            WaveShape.Noise,
+            1188,
+            5000,
+            0,
+            40,
+            125,
+            SoundExpressionEffect.None,
+            InterpolationCurve.Curve
         ), music.PlaybackMode.InBackground)
         timer.after(300, function () {
             controller.moveSprite(sprite_player, 75, 75)
@@ -5815,24 +4787,24 @@ function playerAttack () {
         })
     }
 }
-function playBatAttack () {
+function playBatAttack() {
     music.play(music.createSoundEffect(
-    WaveShape.Sawtooth,
-    randint(3500, 4000),
-    5000,
-    100,
-    0,
-    300,
-    SoundExpressionEffect.Vibrato,
-    InterpolationCurve.Logarithmic
+        WaveShape.Sawtooth,
+        randint(3500, 4000),
+        5000,
+        100,
+        0,
+        300,
+        SoundExpressionEffect.Vibrato,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
 }
-function wakeUpBat (_bat: Sprite) {
+function wakeUpBat(_bat: Sprite) {
     _bat.setFlag(SpriteFlag.Ghost, false)
     playBatNoise()
     animation.runImageAnimation(
-    _bat,
-    [img`
+        _bat,
+        [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5849,7 +4821,7 @@ function wakeUpBat (_bat: Sprite) {
         c d c b c c c c c c c b c d c . 
         c c c b c c c c c c c b c c c . 
         . . c d c c c c c c c d c . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . c c c . . . . . c c c . . . 
         . . c b c . c c c . c b c . . . 
@@ -5866,7 +4838,7 @@ function wakeUpBat (_bat: Sprite) {
         . . c d c . . . . . c d c . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . c c c . . . . . c c c . . . 
         . . c b c . c c c . c b c . . . 
         . . c b c c 7 7 7 c c b c . . . 
@@ -5883,7 +4855,7 @@ function wakeUpBat (_bat: Sprite) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . c c c . . . . . c c c . . . 
         . . c b c . c c c . c b c . . . 
         . . c b c c 7 7 7 c c b c . . . 
@@ -5900,7 +4872,7 @@ function wakeUpBat (_bat: Sprite) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . c c c . . . . . c c c . . . 
         . . c b c . c c c . c b c . . . 
@@ -5917,7 +4889,7 @@ function wakeUpBat (_bat: Sprite) {
         . . c d c . . . . . c d c . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5934,7 +4906,7 @@ function wakeUpBat (_bat: Sprite) {
         c d c b c c c c c c c b c d c . 
         c c c b c . . . . . c b c c c . 
         . . c d c . . . . . c d c . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5951,7 +4923,7 @@ function wakeUpBat (_bat: Sprite) {
         c d c b c c c c c c c b c d c . 
         c c c b c . . . . . c b c c c . 
         . . c d c . . . . . c d c . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5968,7 +4940,7 @@ function wakeUpBat (_bat: Sprite) {
         c d c b c c c c c c c b c d c . 
         c c c b c . . . . . c b c c c . 
         . . c d c . . . . . c d c . . . 
-        `,img`
+        `, img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -5986,8 +4958,8 @@ function wakeUpBat (_bat: Sprite) {
         c c c b c . . . . . c b c c c . 
         . . c d c . . . . . c d c . . . 
         `],
-    75,
-    false
+        75,
+        false
     )
     sprites.setDataNumber(_bat, "data_isBusy", 1)
     sprites.setDataNumber(_bat, "data_lastDirectionChangeTime", game.runtime())
@@ -5998,8 +4970,8 @@ function wakeUpBat (_bat: Sprite) {
         if (sprites.readDataNumber(_bat, "data_health") == 2) {
             sprites.setDataNumber(_bat, "data_isBusy", 0)
             animation.runImageAnimation(
-            _bat,
-            [img`
+                _bat,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6016,7 +4988,7 @@ function wakeUpBat (_bat: Sprite) {
                 c c c b c c c c c c c b c d c . 
                 c c c b c c c c c c c d c c c . 
                 . . c d c c c c c c c c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6033,7 +5005,7 @@ function wakeUpBat (_bat: Sprite) {
                 c d c b c c c c c c c b c d c . 
                 c c c b c c c c c c c b c c c . 
                 . . c d c c c c c c c d c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6050,7 +5022,7 @@ function wakeUpBat (_bat: Sprite) {
                 c d c b c c c c c c c b c c c . 
                 c c c d c c c c c c c b c c c . 
                 . . c c c c c c c c c d c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6068,8 +5040,8 @@ function wakeUpBat (_bat: Sprite) {
                 c c c b c c c c c c c b c c c . 
                 . . c d c c c c c c c d c . . . 
                 `],
-            100,
-            true
+                100,
+                true
             )
         }
     })
@@ -6081,7 +5053,7 @@ controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
         bool_settingMusic = true
     }
 })
-function createTreesInView () {
+function createTreesInView() {
     for (let value of tiles.getTilesByType(assets.tile`myTile34`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             sprite_tree = sprites.create(assets.image`Tree2`, SpriteKind.Tree)
@@ -6091,13 +5063,13 @@ function createTreesInView () {
         }
     }
 }
-function batDashAttack (_bat: Sprite) {
+function batDashAttack(_bat: Sprite) {
     sprites.setDataNumber(_bat, "data_isBusy", 1)
     sprites.setDataNumber(_bat, "data_lastAttackHealth", sprites.readDataNumber(_bat, "data_health"))
     _bat.setVelocity(0, 0)
     animation.runImageAnimation(
-    _bat,
-    [img`
+        _bat,
+        [img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . c c c . . . . . c c c . . . 
@@ -6115,16 +5087,16 @@ function batDashAttack (_bat: Sprite) {
         c c c b c c c c c c c b c c c . 
         . . c d c c c c c c c d c . . . 
         `],
-    100,
-    false
+        100,
+        false
     )
     playBatAttack()
     if (sprites.readDataNumber(_bat, "data_health") == sprites.readDataNumber(_bat, "data_lastAttackHealth")) {
         timer.after(600, function () {
             _bat.follow(sprite_player, 60)
             animation.runImageAnimation(
-            _bat,
-            [img`
+                _bat,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6141,7 +5113,7 @@ function batDashAttack (_bat: Sprite) {
                 c c c b c c c c c c c b c d c . 
                 c c c b c c c c c c c d c c c . 
                 . . c d c c c c c c c c c . . . 
-                `,img`
+                `, img`
                 . . . . . . . . . . . . . . . . 
                 . . . . . . . . . . . . . . . . 
                 . . c c c . . . . . c c c . . . 
@@ -6159,14 +5131,14 @@ function batDashAttack (_bat: Sprite) {
                 c c c d c c c c c c c b c c c . 
                 . . c c c c c c c c c d c . . . 
                 `],
-            100,
-            true
+                100,
+                true
             )
             timer.after(2000, function () {
                 if (sprites.readDataNumber(_bat, "data_health") == sprites.readDataNumber(_bat, "data_lastAttackHealth")) {
                     animation.runImageAnimation(
-                    _bat,
-                    [img`
+                        _bat,
+                        [img`
                         . . . . . . . . . . . . . . . . 
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
@@ -6183,7 +5155,7 @@ function batDashAttack (_bat: Sprite) {
                         c c c b c c c c c c c b c d c . 
                         c c c b c c c c c c c d c c c . 
                         . . c d c c c c c c c c c . . . 
-                        `,img`
+                        `, img`
                         . . . . . . . . . . . . . . . . 
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
@@ -6200,7 +5172,7 @@ function batDashAttack (_bat: Sprite) {
                         c d c b c c c c c c c b c d c . 
                         c c c b c c c c c c c b c c c . 
                         . . c d c c c c c c c d c . . . 
-                        `,img`
+                        `, img`
                         . . . . . . . . . . . . . . . . 
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
@@ -6217,7 +5189,7 @@ function batDashAttack (_bat: Sprite) {
                         c d c b c c c c c c c b c c c . 
                         c c c d c c c c c c c b c c c . 
                         . . c c c c c c c c c d c . . . 
-                        `,img`
+                        `, img`
                         . . . . . . . . . . . . . . . . 
                         . . . . . . . . . . . . . . . . 
                         . . c c c . . . . . c c c . . . 
@@ -6235,8 +5207,8 @@ function batDashAttack (_bat: Sprite) {
                         c c c b c c c c c c c b c c c . 
                         . . c d c c c c c c c d c . . . 
                         `],
-                    100,
-                    true
+                        100,
+                        true
                     )
                     sprites.setDataNumber(_bat, "data_lastAttackTime", game.runtime())
                     _bat.follow(sprite_player, 0)
@@ -6246,7 +5218,7 @@ function batDashAttack (_bat: Sprite) {
         })
     }
 }
-function createLeavesTile (_column: number, _row: number) {
+function createLeavesTile(_column: number, _row: number) {
     _sprite_debris = sprites.create(img`
         ....................
         ....................
@@ -6270,8 +5242,8 @@ function createLeavesTile (_column: number, _row: number) {
         ....................
         `, SpriteKind.Dummy)
     animation.runImageAnimation(
-    _sprite_debris,
-    [img`
+        _sprite_debris,
+        [img`
         .ccc................
         .c77c...............
         .c777c..........cccc
@@ -6292,7 +5264,7 @@ function createLeavesTile (_column: number, _row: number) {
         ....................
         ....................
         ....................
-        `,img`
+        `, img`
         ....................
         ....................
         .ccc................
@@ -6313,7 +5285,7 @@ function createLeavesTile (_column: number, _row: number) {
         .........c..........
         ....................
         ....................
-        `,img`
+        `, img`
         ....................
         ....................
         ....................
@@ -6334,7 +5306,7 @@ function createLeavesTile (_column: number, _row: number) {
         ......c777c.........
         ......cccc..........
         ....................
-        `,img`
+        `, img`
         ....................
         ....................
         ....................
@@ -6355,7 +5327,7 @@ function createLeavesTile (_column: number, _row: number) {
         .....c6666cc........
         .....ccccc..........
         ....................
-        `,img`
+        `, img`
         ....................
         ....................
         ....................
@@ -6376,7 +5348,7 @@ function createLeavesTile (_column: number, _row: number) {
         .....c......c.......
         .....c....cc........
         .....ccccc..........
-        `,img`
+        `, img`
         ....................
         ....................
         ....................
@@ -6398,13 +5370,13 @@ function createLeavesTile (_column: number, _row: number) {
         ....................
         ....................
         `],
-    100,
-    false
+        100,
+        false
     )
     _sprite_debris.lifespan = 500
     tiles.placeOnTile(_sprite_debris, tiles.getTileLocation(_column, _row))
 }
-function openDoorsInView () {
+function openDoorsInView() {
     for (let value of tiles.getTilesByType(assets.tile`myTile71`)) {
         if (isInView(value.x, value.y, sprite_cameraControl)) {
             tiles.setTileAt(value, assets.tile`myTile16`)
@@ -6464,22 +5436,22 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile62`, function (sprite, 
         })
     })
 })
-function createLevelCompleteArray () {
+function createLevelCompleteArray() {
     array_levelComplete2D = [
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0]
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0]
     ]
 }
-function wakeUpDrone (_drone: Sprite) {
+function wakeUpDrone(_drone: Sprite) {
     _drone.setKind(SpriteKind.Enemy)
     playBatNoise()
     animation.runImageAnimation(
-    _drone,
-    [img`
+        _drone,
+        [img`
         . . . . c d c . . . . . . . . . 
         . . . c b d d c . c c c c c . . 
         . . c c c c c b c d d d b b c . 
@@ -6497,8 +5469,8 @@ function wakeUpDrone (_drone: Sprite) {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         `],
-    500,
-    false
+        500,
+        false
     )
     sprites.setDataNumber(_drone, "data_isBusy", 1)
     sprites.setDataNumber(_drone, "data_lastDirectionChangeTime", game.runtime())
@@ -6510,8 +5482,8 @@ function wakeUpDrone (_drone: Sprite) {
         if (sprites.readDataNumber(_drone, "data_health") == 1) {
             sprites.setDataNumber(_drone, "data_isBusy", 0)
             animation.runImageAnimation(
-            _drone,
-            [img`
+                _drone,
+                [img`
                 . . . . c c c c c c . . . . . . 
                 . . . c d d d d d c . c c . . . 
                 . . c b b b d c d c c b b c . . 
@@ -6528,7 +5500,7 @@ function wakeUpDrone (_drone: Sprite) {
                 . . . c b c 7 7 7 c b c . . . . 
                 . . . . c b c c c b c . . . . . 
                 . . . . . c c c c c . . . . . . 
-                `,img`
+                `, img`
                 . . . . c c c . c c c . . . . . 
                 . . c c d d c . c b b c c . . . 
                 . c d d d d d c c b d d d c . . 
@@ -6545,7 +5517,7 @@ function wakeUpDrone (_drone: Sprite) {
                 . . . c b c 7 7 7 c b c . . . . 
                 . . . . c b c c c b c . . . . . 
                 . . . . . c c c c c . . . . . . 
-                `,img`
+                `, img`
                 . . . . c c c c c c c . . . . . 
                 . . . c b b d d d d d c . . . . 
                 c c c c c c b c d d c . . . . . 
@@ -6562,7 +5534,7 @@ function wakeUpDrone (_drone: Sprite) {
                 . . . c b c 7 7 7 c b c . . . . 
                 . . . . c b c c c b c . . . . . 
                 . . . . . c c c c c . . . . . . 
-                `,img`
+                `, img`
                 . . . . c . . . c c c . . . . . 
                 . . c c d c c c b d d c c . . . 
                 . c d d d d c c b d d d d c . . 
@@ -6580,8 +5552,8 @@ function wakeUpDrone (_drone: Sprite) {
                 . . . . c b c c c b c . . . . . 
                 . . . . . c c c c c . . . . . . 
                 `],
-            50,
-            true
+                50,
+                true
             )
         }
     })
@@ -6589,11 +5561,11 @@ function wakeUpDrone (_drone: Sprite) {
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile95`, function (sprite, location) {
     flipSwitch(assets.tile`myTile96`, assets.tile`myTile92`, assets.tile`myTile93`, assets.tile`myTile94`, location.column, location.row)
 })
-function setPlayerAnimations (_type: number, _delay: number) {
+function setPlayerAnimations(_type: number, _delay: number) {
     _array_animSprites = []
     if (_type == 1) {
         _array_animSprites = [
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6607,7 +5579,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . c c c b c c b c c c . 
             . . . c c . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6621,7 +5593,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c b c c c c . . . 
             . . . c c . . . . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6635,7 +5607,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c c c c b c . . . 
             . . . . . . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6649,7 +5621,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . c c c b c c b c c c . 
             . . . c c . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6663,7 +5635,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c c c c b c . . . 
             . . . . . . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6677,7 +5649,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c b c c c c . . . 
             . . . c c . . . . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6691,7 +5663,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c c b c . . . . 
             . . . . c b b c . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b c c . 
@@ -6705,7 +5677,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . c c c b b c . . . . 
             . . . c b c c b c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6719,7 +5691,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . c c c b c c c . . . 
             . . . c b c c b c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6733,7 +5705,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c b c c . . . . 
             . . . . c b b c . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6747,7 +5719,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c c c b c c c . . 
             . . . c b c c b c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c b b b b b b c . . 
             . c b b b b b b b b c . 
@@ -6761,7 +5733,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c b b c c c . . 
             . . . c b c c b c . . . 
             `,
-        img`
+            img`
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
@@ -6780,7 +5752,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
         ]
     } else if (_type == 2) {
         _array_animSprites = [
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6794,7 +5766,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . c c c 6 c c 6 c c c . 
             . . . c c . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6808,7 +5780,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c 6 c c c c . . . 
             . . . c c . . . . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6822,7 +5794,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c c c c 6 c . . . 
             . . . . . . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6836,7 +5808,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . c c c 6 c c 6 c c c . 
             . . . c c . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6850,7 +5822,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c c c c 6 c . . . 
             . . . . . . . c c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d 6 c . 
@@ -6864,7 +5836,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . c 6 c c c c . . . 
             . . . c c . . . . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c d d d d d d d 6 c . 
@@ -6878,7 +5850,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c c 7 c . . . . 
             . . . . c 6 6 c . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c d d d d d d d 6 c . 
@@ -6892,7 +5864,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . c c c 7 7 c . . . . 
             . . . c b c c 6 c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c d d d d d d d 6 c . 
@@ -6906,7 +5878,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . c c c 7 c c c . . . 
             . . . c 6 c c b c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d d c . 
@@ -6920,7 +5892,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c 7 c c . . . . 
             . . . . c 6 6 c . . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d d c . 
@@ -6934,7 +5906,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c 7 7 c c c . . 
             . . . c 6 c c b c . . . 
             `,
-        img`
+            img`
             . . . c c c c c c . . . 
             . . c d d d d d d c . . 
             . c 6 d d d d d d d c . 
@@ -6948,7 +5920,7 @@ function setPlayerAnimations (_type: number, _delay: number) {
             . . . . c 7 7 c c c . . 
             . . . c 6 c c b c . . . 
             `,
-        img`
+            img`
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
             . . . . . . . . . . . . . . 
@@ -7006,12 +5978,12 @@ function setPlayerAnimations (_type: number, _delay: number) {
     anim_death.addAnimationFrame(_array_animSprites[12])
     animation.attachAnimation(sprite_player, anim_death)
 }
-function cat1Dialog (_cat1: Sprite) {
+function cat1Dialog(_cat1: Sprite) {
     if (!(bool_isNPCTalking)) {
         bool_isNPCTalking = true
         animation.runImageAnimation(
-        _cat1,
-        [img`
+            _cat1,
+            [img`
             . . . . . . . . . . . . . . . . 
             . c c c . . . . c c c . . . . . 
             . c d d c . . c d d c . . . . . 
@@ -7028,7 +6000,7 @@ function cat1Dialog (_cat1: Sprite) {
             . . . c d c c c c c d c . . . . 
             . . . c c . . . . . c c . . . . 
             . . . . . . . . . . . . . . . . 
-            `,img`
+            `, img`
             . . . . . . . . . . . . . . . . 
             . c c c . . . . c c c . . . . . 
             . c d d c . . c d d c . . . . . 
@@ -7046,8 +6018,8 @@ function cat1Dialog (_cat1: Sprite) {
             . . . . . . c c . . c c . . . . 
             . . . . . . . . . . . . . . . . 
             `],
-        350,
-        true
+            350,
+            true
         )
         playCatNoise()
         if (num_lastDialogNPC2 == 0) {
@@ -7066,8 +6038,8 @@ function cat1Dialog (_cat1: Sprite) {
         timer.after(_num_dialogLength, function () {
             bool_isNPCTalking = false
             animation.runImageAnimation(
-            _cat1,
-            [img`
+                _cat1,
+                [img`
                 . . . . . . . . . . . . . . . . 
                 . c c c . . . . c c c . . . . . 
                 . c d d c . . c d d c . . . . . 
@@ -7085,8 +6057,8 @@ function cat1Dialog (_cat1: Sprite) {
                 . . . c c . c c . . c c . . . . 
                 . . . . . . . . . . . . . . . . 
                 `],
-            200,
-            false
+                200,
+                false
             )
         })
     }
@@ -7099,7 +6071,7 @@ sprites.onOverlap(SpriteKind.Sword, SpriteKind.Enemy, function (sprite, otherSpr
         damageDrone(otherSprite, -1, sprite_player)
     }
 })
-function setPaletteGreen () {
+function setPaletteGreen() {
     palette_white = color.parseColorString("#e5cdc4")
     palette_gray = color.parseColorString("#a4839f")
     palette_black = color.parseColorString("#5c406c")
@@ -7107,7 +6079,7 @@ function setPaletteGreen () {
     palette_colourDark = color.parseColorString("#249ca3")
 }
 
-function createPlayerController (_speed: number) {
+function createPlayerController(_speed: number) {
     sprite_sword = sprites.create(img`
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -7160,7 +6132,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile68`, function (sprite, 
     num_playerSpeed = 25
 })
 
-function destroyBarrel (_column: number, _row: number) {
+function destroyBarrel(_column: number, _row: number) {
     tiles.setWallAt(tiles.getTileLocation(_column, _row), false)
     if (Math.percentChance(33)) {
         if (Math.percentChance(50)) {
@@ -7185,54 +6157,54 @@ function destroyBarrel (_column: number, _row: number) {
     createSmokePosition(tiles.getTileLocation(_column, _row).x, tiles.getTileLocation(_column, _row).y)
     _num_barrelPitch = randint(75, 100)
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    1958,
-    _num_barrelPitch * 8,
-    40,
-    0,
-    100,
-    SoundExpressionEffect.Vibrato,
-    InterpolationCurve.Logarithmic
+        WaveShape.Noise,
+        1958,
+        _num_barrelPitch * 8,
+        40,
+        0,
+        100,
+        SoundExpressionEffect.Vibrato,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
     music.play(music.createSoundEffect(
-    WaveShape.Noise,
-    _num_barrelPitch * 5,
-    _num_barrelPitch * 4.5,
-    40,
-    0,
-    200,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
+        WaveShape.Noise,
+        _num_barrelPitch * 5,
+        _num_barrelPitch * 4.5,
+        40,
+        0,
+        200,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
     music.play(music.createSoundEffect(
-    WaveShape.Triangle,
-    _num_barrelPitch * 5,
-    _num_barrelPitch * 5,
-    50,
-    0,
-    100,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
+        WaveShape.Triangle,
+        _num_barrelPitch * 5,
+        _num_barrelPitch * 5,
+        50,
+        0,
+        100,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
     music.play(music.createSoundEffect(
-    WaveShape.Triangle,
-    _num_barrelPitch * 3,
-    _num_barrelPitch * 3,
-    45,
-    0,
-    175,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
+        WaveShape.Triangle,
+        _num_barrelPitch * 3,
+        _num_barrelPitch * 3,
+        45,
+        0,
+        175,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
     music.play(music.createSoundEffect(
-    WaveShape.Triangle,
-    _num_barrelPitch,
-    _num_barrelPitch,
-    40,
-    0,
-    350,
-    SoundExpressionEffect.None,
-    InterpolationCurve.Logarithmic
+        WaveShape.Triangle,
+        _num_barrelPitch,
+        _num_barrelPitch,
+        40,
+        0,
+        350,
+        SoundExpressionEffect.None,
+        InterpolationCurve.Logarithmic
     ), music.PlaybackMode.InBackground)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile78`, function (sprite, location) {
@@ -7242,14 +6214,14 @@ scene.onOverlapTile(SpriteKind.Sword, assets.tile`Empty3`, function (sprite, loc
     endGame(location.column, location.row)
 })
 
-function setPaletteRed () {
+function setPaletteRed() {
     palette_white = color.parseColorString("#e5cdc4")
     palette_gray = color.parseColorString("#98807B")
     palette_black = color.parseColorString("#4a3232")
     palette_colourLight = color.parseColorString("#ff667a")
     palette_colourDark = color.parseColorString("#A54C56")
 }
-function isInView (_x: number, _y: number, _camera: Sprite) {
+function isInView(_x: number, _y: number, _camera: Sprite) {
     if (_x < _camera.x + 96 && _x > _camera.x - 96 && (_y < _camera.y + 76 && _y > _camera.y - 76)) {
         return true
     } else {
@@ -7257,7 +6229,7 @@ function isInView (_x: number, _y: number, _camera: Sprite) {
     }
 }
 
-function updateTorches () {
+function updateTorches() {
     if (bool_torchChange) {
         bool_torchChange = false
         for (let value of tiles.getTilesByType(assets.tile`myTile19`)) {
@@ -7271,14 +6243,14 @@ function updateTorches () {
     }
 }
 
-function destroyDungeonMusicOutOfView () {
+function destroyDungeonMusicOutOfView() {
     for (let value of sprites.allOfKind(SpriteKind.DungeonMusic)) {
         if (isInView(value.x, value.x, sprite_cameraControl)) {
             sprites.destroy(value)
         }
     }
 }
-function updateCamera (_camera: Sprite, _player: Sprite) {
+function updateCamera(_camera: Sprite, _player: Sprite) {
     if (!(bool_isGameOver)) {
         _camera.x = _player.x - 8 - (_player.x - 8) % 160 + 88
         _camera.y = _player.y - 8 - (_player.y - 8) % 128 + 72
@@ -7393,3 +6365,4 @@ game.onUpdateInterval(100, function () {
         bool_isEnemyMusic = false
     }
 })
+

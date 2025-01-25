@@ -1,4 +1,7 @@
 
+let sprite_player: Sprite = null
+
+
 
 function playerInteract() {
     sprite_playerInteract = sprites.create(img`
@@ -32,6 +35,25 @@ function playerInteract() {
         sprite_playerInteract.setPosition(sprite_player.x, sprite_player.y + 10)
     }
 }
+
+
+
+
+/*
+Player Animation
+*/
+
+let anim_death: animation.Animation = null
+let anim_walkRight: animation.Animation = null
+let anim_idleRight: animation.Animation = null
+let anim_walkLeft: animation.Animation = null
+let anim_idleLeft: animation.Animation = null
+let anim_walkUp: animation.Animation = null
+let anim_idleUp: animation.Animation = null
+let anim_walkDown: animation.Animation = null
+let anim_idleDown: animation.Animation = null
+
+let _array_animSprites: Image[] = []
 
 function animatePlayer() {
     if (!(bool_isPlayerDead)) {

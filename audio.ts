@@ -1,3 +1,6 @@
+let bool_isEnemyMusic = false
+let bool_isNPCMusic = false
+
 function playHitSound() {
     music.play(music.createSoundEffect(
         WaveShape.Noise,
@@ -23,3 +26,5 @@ function playCatNoise() {
         InterpolationCurve.Linear
     ), music.PlaybackMode.InBackground)
 }
+
+let _num_barrelPitch = 0
